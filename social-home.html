@@ -1,0 +1,2690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home - 品遇小程序预览</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="home.css">
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: white;
+        }
+        
+        /* 容器样式 - 全屏版本 */
+        .page-container {
+            width: 100vw !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: linear-gradient(135deg, #4F46E5, #F59E0B);
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box !important;
+        }
+        
+        /* 顶部导航样式 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.95);
+            border-bottom: 1px solid rgba(240,240,240,0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .brand-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .brand-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.2;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-tab {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .nav-tab.active {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #007AFF;
+            border-radius: 1px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f8f8;
+            cursor: pointer;
+        }
+        
+        .message-icon .icon {
+            font-size: 18px;
+        }
+        
+        .message-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3b30;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 16px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* 调试信息 */
+        .debug-info {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+        
+        /* 运营入口样式 */
+        .admin-entry {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-entry.visible {
+            display: flex;
+        }
+        
+        .admin-entry:hover {
+            background: rgba(0,0,0,0.2);
+            transform: scale(1.1);
+        }
+        
+        .admin-entry-icon {
+            font-size: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* 运营操作菜单样式 */
+        .admin-action-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10001;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .action-menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .action-menu-content {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 414px;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .action-menu-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .action-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 16px;
+        }
+        
+        .action-menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-menu-item.cancel {
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            margin-top: 10px;
+        }
+        
+        .action-menu-item.cancel:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* 背景编辑面板样式 */
+        .background-editor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .background-editor.active {
+            display: flex;
+        }
+        
+        .editor-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .editor-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .editor-section {
+            margin-bottom: 20px;
+        }
+        
+        .editor-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 1;
+        }
+        
+        .file-input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #4F46E5;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .file-input-button:hover {
+            background: #4338CA;
+        }
+        
+        .preview-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .gradient-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .gradient-option {
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .gradient-option.selected {
+            border-color: #4F46E5;
+            transform: scale(1.05);
+        }
+        
+        .editor-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .editor-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .editor-button.primary {
+            background: #4F46E5;
+            color: white;
+        }
+        
+        .editor-button.primary:hover {
+            background: #4338CA;
+        }
+        
+        .editor-button.secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+        
+        .editor-button.secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        /* 动态背景样式 */
+        .page-container.custom-background {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* 底部导航栏样式 - 全屏通栏版本 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0 !important;
+            transform: none !important;
+            width: 100vw !important;
+            max-width: none !important;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(240,240,240,0.5);
+            padding: 10px 0;
+            z-index: 1000;
+            box-sizing: border-box !important;
+        }
+        
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            color: #666;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #4F46E5;
+        }
+        
+        .nav-label {
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #4F46E5;
+        }
+        
+        /* 搜索框板块样式 - 全屏通栏版本 */
+        .search-section {
+            display: block !important;
+            width: 100vw !important;
+            margin: 0 !important;
+            padding: 20px 0 15px 0 !important;
+            background: linear-gradient(135deg, #FF6B9D, #C084FC) !important;
+            position: relative !important;
+            left: 50% !important;
+            right: 50% !important;
+            margin-left: -50vw !important;
+            margin-right: -50vw !important;
+            z-index: 1001 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: auto !important;
+            min-height: 80px !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
+            margin-top: 160px !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* 覆盖可能的隐藏样式 */
+        .search-section.wx-hidden {
+            display: block !important;
+        }
+        
+        .search-container {
+            max-width: 1200px !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+            padding: 0 20px !important;
+            display: block !important;
+            visibility: visible !important;
+            box-sizing: border-box !important;
+        }
+        
+        .search-input-wrapper {
+            display: flex !important;
+            align-items: center !important;
+            background: rgba(255,255,255,0.95) !important;
+            border-radius: 25px !important;
+            padding: 12px 20px !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            visibility: visible !important;
+            position: relative !important;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            color: #333;
+            margin: 0 10px;
+        }
+        
+        .search-input::placeholder {
+            color: #999;
+        }
+        
+        .search-icon, .filter-icon {
+            color: #666;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+        
+        .search-icon:hover, .filter-icon:hover {
+            color: #FF6B9D;
+        }
+        
+        /* 搜索结果样式 */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .search-results-header {
+            padding: 15px 20px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .results-count {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .search-results-list {
+            padding: 10px 0;
+        }
+        
+        .search-result-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #FF6B9D;
+        }
+        
+        .search-result-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .search-result-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .search-result-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B9D, #C084FC);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        
+        .search-icon {
+            font-size: 18px;
+            margin-right: 10px;
+            color: #666;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .search-input::placeholder {
+            color: #999;
+        }
+        
+        .filter-icon {
+            font-size: 18px;
+            margin-left: 10px;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        /* 立即加入板块样式 - 全屏版本 */
+        .join-section {
+            padding: 15px 0 15px 0 !important;
+            width: 100vw !important;
+            position: relative !important;
+            left: 50% !important;
+            right: 50% !important;
+            margin-left: -50vw !important;
+            margin-right: -50vw !important;
+            box-sizing: border-box !important;
+        }
+        
+        .join-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            width: calc(100% - 30px) !important;
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+            left: 15px !important;
+            right: 15px !important;
+            box-sizing: border-box !important;
+        }
+        
+        .join-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1F2937;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+        }
+        
+        .join-subtitle {
+            font-size: 13px;
+            color: #6B7280;
+            margin: 0 0 16px 0;
+            line-height: 1.4;
+        }
+        
+        .join-button {
+            background: #1F2937;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .join-button:hover {
+            background: #374151;
+            transform: translateY(-1px);
+        }
+        
+        /* 轮播海报栏样式 - 全屏版本 */
+        .carousel-section {
+            padding: 15px 0 5px 0 !important;
+            width: 100vw !important;
+            position: relative !important;
+            left: 50% !important;
+            right: 50% !important;
+            margin-left: -50vw !important;
+            margin-right: -50vw !important;
+            box-sizing: border-box !important;
+        }
+        
+        .carousel-container {
+            background: transparent;
+            border-radius: 16px;
+            overflow: hidden;
+            width: calc(100% - 30px) !important;
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 比例 (9/16 * 100%) */
+            position: relative;
+            left: 15px !important;
+            right: 15px !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* 轮播指示器样式 - 移到轮播外面 */
+        .carousel-indicators {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            transform: none;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+            justify-content: center;
+            margin-top: 10px;
+            padding-bottom: 15px;
+        }
+        
+        .carousel-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            outline: none; /* 移除焦点轮廓 */
+            position: relative; /* 确保可点击 */
+            z-index: 100; /* 提高层级确保可点击 */
+        }
+        
+        .carousel-indicator.active {
+            width: 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .carousel-indicator:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.2);
+        }
+        
+        .carousel-slide {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carousel-slide.active {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide-content {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            gap: 15px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        
+        .slide-left {
+            flex: 1;
+        }
+        
+        .brand-info {
+            color: #333;
+        }
+        
+        .brand-logo-small {
+            background: #FF6347;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .brand-info h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .brand-desc {
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+        
+        .brand-detail {
+            font-size: 11px;
+            color: #888;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+        }
+        
+        .brand-slogan {
+            font-size: 11px;
+            color: #888;
+            margin: 0;
+        }
+        
+        .slide-right {
+            flex-shrink: 0;
+        }
+        
+        .slide-right.full-width {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .phone-mockup {
+            width: 100px;
+            height: 160px;
+            background: #333;
+            border-radius: 15px;
+            padding: 6px;
+            position: relative;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .app-interface {
+            padding: 15px 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .user-profile .avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .match-cards {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .match-card {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: #666;
+            flex: 1;
+            min-width: 40px;
+        }
+        
+        .match-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        
+        .price-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #FF6347;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            background: transparent;
+        }
+        
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator.active {
+            background: #007AFF;
+            transform: scale(1.2);
+        }
+        
+        /* 会员头像轮播样式 */
+        .members-carousel-section {
+            background: transparent;
+            padding: 30px 0;
+            overflow: hidden;
+        }
+        
+        .members-carousel-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .members-carousel-track {
+            display: flex;
+            animation: scroll-left 20s linear infinite;
+            gap: 8px;
+            padding: 0 20px;
+        }
+        
+        .member-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 90px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .member-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-avatar {
+            width: 60px !important;
+            height: 60px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            box-shadow: none !important;
+            margin-bottom: 12px !important;
+            transition: none !important;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            padding: 0 !important;
+            margin: 0 0 12px 0 !important;
+            overflow: hidden !important;
+            display: block !important;
+            box-sizing: border-box !important;
+            /* 强制去除任何可能的白色背景 */
+            -webkit-background-clip: padding-box !important;
+            background-clip: padding-box !important;
+            background-color: transparent !important;
+            background-image: none !important;
+        }
+        
+        .member-avatar img {
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            background-color: transparent !important;
+            background-image: none !important;
+            border: none !important;
+            outline: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: block !important;
+            box-shadow: none !important;
+            box-sizing: border-box !important;
+            object-fit: cover !important;
+            /* 强制去除img标签的默认样式 */
+            -webkit-background-clip: padding-box !important;
+            background-clip: padding-box !important;
+        }
+        
+        .member-item:hover .member-avatar {
+            box-shadow: none !important;
+        }
+        
+        .member-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        /* 暂停动画在悬停时 */
+        .members-carousel-track:hover {
+            animation-play-state: paused;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .members-carousel-section {
+                padding: 20px 0;
+            }
+            
+            .member-item {
+                min-width: 75px;
+            }
+            
+            .member-avatar {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .member-name {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="debug-info">
+        📱 home 页面预览 | 🔄 同步时间: 2025/10/18 21:36:01
+    </div> -->
+    
+    <div class="page-container">
+        <!-- 统一顶部导航栏 -->
+        <div id="unified-navbar-container"></div>
+        
+        <!-- 搜索框板块 -->
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search for jobs" autocomplete="off">
+                    <span class="filter-icon" id="filterIcon">👥</span>
+                </div>
+                <!-- 搜索结果下拉框 -->
+                <div class="search-results" id="searchResults" style="display: none;">
+                    <div class="search-results-header">
+                        <span class="results-count">搜索结果</span>
+                    </div>
+                    <div class="search-results-list" id="searchResultsList">
+                        <!-- 搜索结果将在这里动态显示 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容 -->
+        <div class="main-content">
+            <!-- 欢迎区域 -->
+            <div class="welcome-section" id="welcomeSection">
+                <!-- 未登录状态 -->
+                <div class="guest-welcome" id="guestWelcome">
+                    <h1>欢迎来到频遇俱乐部</h1>
+                    <p>发现志同道合的朋友，开启精彩社交生活</p>
+                </div>
+                <!-- 已登录状态 -->
+                <div class="user-welcome" id="userWelcome" style="display: none;">
+                    <div class="welcome-greeting">
+                        <h1>你好，<span id="welcomeUserName">朋友</span>！</h1>
+                        <p>今天也要保持好心情哦 ✨</p>
+                    </div>
+
+                </div>
+            </div>
+            
+
+            
+            <!-- 推荐内容区域（仅登录用户可见） -->
+            <div class="recommendations" id="recommendations" style="display: none;">
+                <h3>为你推荐</h3>
+                <div class="recommendation-cards">
+                    <div class="recommendation-card">
+                        <div class="rec-icon">🎯</div>
+                        <div class="rec-content">
+                            <div class="rec-title">今日匹配</div>
+                            <div class="rec-desc">3位新朋友等你发现</div>
+                        </div>
+                        <button class="rec-action" onclick="goToMatch()">查看</button>
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <div class="rec-icon">📝</div>
+                        <div class="rec-content">
+                            <div class="rec-title">完善资料</div>
+                            <div class="rec-desc">提升匹配成功率</div>
+                        </div>
+                        <button class="rec-action" onclick="goToProfile()">编辑</button>
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <div class="rec-icon">🌟</div>
+                        <div class="rec-content">
+                            <div class="rec-title">热门活动</div>
+                            <div class="rec-desc">参与社区活动</div>
+                        </div>
+                        <button class="rec-action" onclick="alert('活动功能开发中...')">参与</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 立即加入板块 -->
+        <div class="join-section">
+            <div class="join-card">
+                <h2 class="join-title">同频终相逢·共振即永恒</h2>
+                <p class="join-subtitle">AI驱动的高质量线下活动与专属社交</p>
+                <button class="join-button">立即加入</button>
+            </div>
+        </div>
+        
+        <!-- 轮播海报栏 -->
+        <div class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel-slide active">
+                    <div class="slide-content">
+                        <div class="slide-left">
+                            <div class="brand-info">
+                                <div class="brand-logo-small">PINYU</div>
+                                <h3>PINYU CLUB</h3>
+                                <p class="brand-desc">高端社交俱乐部小程序</p>
+                                <p class="brand-detail">专为25-65岁高净值人群打造的高质量社交平台</p>
+                                <p class="brand-slogan">同频终相逢，共振即永恒</p>
+                            </div>
+                        </div>
+                        <div class="slide-right">
+                            <div class="phone-mockup">
+                                <div class="phone-screen">
+                                    <div class="app-interface">
+                                        <div class="user-profile">
+                                            <div class="avatar">👤</div>
+                                            <span>陈小姐</span>
+                                        </div>
+                                        <div class="match-cards">
+                                            <div class="match-card">
+                                                <div class="match-avatar">👨</div>
+                                                <span>投资顾问</span>
+                                            </div>
+                                            <div class="match-card">
+                                                <div class="match-avatar">👩</div>
+                                                <span>律师</span>
+                                            </div>
+                                        </div>
+                                        <div class="price-tag">$450,000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <div class="slide-bg"></div>
+                        <div class="brand-info">
+                            <div class="brand-title">精英社交</div>
+                            <div class="brand-subtitle">高质量人脉网络</div>
+                            <div class="brand-description">连接各行业精英，拓展优质人脉圈</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <div class="slide-bg"></div>
+                        <div class="brand-info">
+                            <div class="brand-title">线下活动</div>
+                            <div class="brand-subtitle">丰富多彩的聚会</div>
+                            <div class="brand-description">定期举办高端聚会、商务沙龙等活动</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <div class="slide-bg"></div>
+                        <div class="brand-info">
+                            <div class="brand-title">AI匹配</div>
+                            <div class="brand-subtitle">智能推荐系统</div>
+                            <div class="brand-description">基于兴趣爱好和价值观的精准匹配</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <div class="slide-bg"></div>
+                        <div class="brand-info">
+                            <div class="brand-title">会员特权</div>
+                            <div class="brand-subtitle">专属服务体验</div>
+                            <div class="brand-description">享受VIP级别的个性化服务和特权</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 轮播指示器 -->
+            <div class="carousel-indicators">
+                <button class="carousel-indicator active" data-slide="0"></button>
+                <button class="carousel-indicator" data-slide="1"></button>
+                <button class="carousel-indicator" data-slide="2"></button>
+                <button class="carousel-indicator" data-slide="3"></button>
+                <button class="carousel-indicator" data-slide="4"></button>
+            </div>
+        </div>
+        
+        <!-- 会员头像轮播区域 -->
+        <div class="members-carousel-section">
+            <div class="members-carousel-container">
+                <div class="members-carousel-track" id="membersCarouselTrack">
+                    <!-- 会员头像将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #007AFF;
+            cursor: pointer;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 用户信息样式 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #007AFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-avatar span {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .login-btn, .register-btn {
+            padding: 8px 16px;
+            border: 1px solid #007AFF;
+            border-radius: 20px;
+            background: white;
+            color: #007AFF;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .register-btn {
+            background: #007AFF;
+            color: white;
+        }
+        
+        .login-btn:hover {
+            background: #007AFF;
+            color: white;
+        }
+        
+        .register-btn:hover {
+            background: #0056CC;
+        }
+        
+        .main-content {
+            padding: 20px;
+            background: rgba(255,255,255,0.95);
+            margin: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .guest-welcome h1, .user-welcome h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .guest-welcome p, .user-welcome p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* 用户欢迎区域样式 */
+        .user-welcome {
+            text-align: center;
+        }
+        
+        .welcome-greeting {
+            margin-bottom: 20px;
+        }
+        
+        .welcome-greeting h1 span {
+            color: #007AFF;
+        }
+        
+
+        
+
+        
+        /* 推荐内容样式 */
+        .recommendations {
+            margin-top: 30px;
+        }
+        
+        .recommendations h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .recommendation-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .recommendation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .recommendation-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .rec-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f8ff;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .rec-content {
+            flex: 1;
+        }
+        
+        .rec-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .rec-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .rec-action {
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .rec-action:hover {
+            background: #0056CC;
+        }
+    </style>
+
+    <script>
+        // API桥接层
+        const wx = {
+            navigateTo: (options) => {
+                console.log('wx.navigateTo:', options);
+                alert('导航到: ' + options.url);
+            },
+            showToast: (options) => {
+                console.log('wx.showToast:', options);
+                alert(options.title);
+            },
+            request: (options) => {
+                console.log('wx.request:', options);
+                // 模拟网络请求
+                setTimeout(() => {
+                    if (options.success) {
+                        options.success({ data: { message: '模拟数据' } });
+                    }
+                }, 1000);
+            }
+        };
+        
+        // 导航函数
+        function goBack() {
+            window.history.back();
+        }
+        
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+        
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+        
+        function goToProfile() {
+            window.location.href = 'profile.html';
+        }
+        
+        function goToMessages() {
+            window.location.href = 'messages.html';
+        }
+        
+        function goToMatch() {
+            window.location.href = 'frequency-match.html';
+        }
+        
+        // 页面数据模拟
+        const pageData = {
+            home: {
+                // 这里可以添加页面特定的模拟数据
+            }
+        };
+        
+        // 登录状态管理
+        function updateUIBasedOnLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const userInfo = localStorage.getItem('userInfo');
+            
+            const authButtons = document.getElementById('authButtons');
+            const userInfoDiv = document.getElementById('userInfo');
+            const guestWelcome = document.getElementById('guestWelcome');
+            const userWelcome = document.getElementById('userWelcome');
+            const recommendations = document.getElementById('recommendations');
+            
+            if (isLoggedIn && userInfo) {
+                try {
+                    const user = JSON.parse(userInfo);
+                    
+                    // 隐藏登录注册按钮，显示用户信息
+                    if (authButtons) authButtons.style.display = 'none';
+                    if (userInfoDiv) userInfoDiv.style.display = 'flex';
+                    
+                    // 隐藏访客欢迎，显示用户欢迎
+                    if (guestWelcome) guestWelcome.style.display = 'none';
+                    if (userWelcome) userWelcome.style.display = 'block';
+                    if (recommendations) recommendations.style.display = 'block';
+                    
+                    // 更新用户信息
+                    const userName = document.getElementById('userName');
+                    const welcomeUserName = document.getElementById('welcomeUserName');
+                    if (userName) userName.textContent = user.nickname || user.username || '用户';
+                    if (welcomeUserName) welcomeUserName.textContent = user.nickname || user.username || '朋友';
+                    
+                    // 设置头像
+                    const userAvatar = document.getElementById('userAvatar');
+                    const userInitial = document.getElementById('userInitial');
+                    
+                    if (userAvatar && userInitial) {
+                        if (user.avatar) {
+                            userAvatar.src = user.avatar;
+                            userAvatar.style.display = 'block';
+                            userInitial.style.display = 'none';
+                        } else {
+                            userAvatar.style.display = 'none';
+                            userInitial.style.display = 'block';
+                            userInitial.textContent = (user.nickname || user.username || 'U').charAt(0).toUpperCase();
+                        }
+                    }
+                    
+                    // 更新统计数据（模拟数据）
+                    const matchCount = document.getElementById('matchCount');
+                    const messageCount = document.getElementById('messageCount');
+                    const visitCount = document.getElementById('visitCount');
+                    if (matchCount) matchCount.textContent = user.stats?.matches || Math.floor(Math.random() * 50);
+                    if (messageCount) messageCount.textContent = user.stats?.messages || Math.floor(Math.random() * 20);
+                    if (visitCount) visitCount.textContent = user.stats?.visits || Math.floor(Math.random() * 100);
+                    
+                    // 更新推荐内容
+                    updateRecommendations();
+                    
+                } catch (error) {
+                    console.error('解析用户信息失败:', error);
+                    // 如果解析失败，清除错误的数据
+                    localStorage.removeItem('userInfo');
+                    localStorage.removeItem('isLoggedIn');
+                    showGuestUI();
+                }
+            } else {
+                showGuestUI();
+            }
+        }
+        
+        function showGuestUI() {
+            const authButtons = document.getElementById('authButtons');
+            const userInfoDiv = document.getElementById('userInfo');
+            const guestWelcome = document.getElementById('guestWelcome');
+            const userWelcome = document.getElementById('userWelcome');
+            const recommendations = document.getElementById('recommendations');
+            
+            // 显示登录注册按钮，隐藏用户信息
+            if (authButtons) authButtons.style.display = 'flex';
+            if (userInfoDiv) userInfoDiv.style.display = 'none';
+            
+            // 显示访客欢迎，隐藏用户欢迎
+            if (guestWelcome) guestWelcome.style.display = 'block';
+            if (userWelcome) userWelcome.style.display = 'none';
+            if (recommendations) recommendations.style.display = 'none';
+        }
+        
+        // 更新推荐内容
+        function updateRecommendations() {
+            const currentHour = new Date().getHours();
+            let greeting = '为你推荐';
+            
+            if (currentHour < 12) {
+                greeting = '早安推荐';
+            } else if (currentHour < 18) {
+                greeting = '午后推荐';
+            } else {
+                greeting = '晚间推荐';
+            }
+            
+            document.querySelector('.recommendations h3').textContent = greeting;
+            
+            // 随机更新推荐内容
+            const recommendations = [
+                { icon: '💝', title: '今日匹配', desc: '发现与你兴趣相投的人', action: '开始匹配' },
+                { icon: '📝', title: '完善资料', desc: '提升你的个人魅力指数', action: '去完善' },
+                { icon: '🎉', title: '热门活动', desc: '参与社区精彩活动', action: '查看详情' },
+                { icon: '💌', title: '心动时刻', desc: '查看谁对你感兴趣', action: '立即查看' },
+                { icon: '🌟', title: '每日签到', desc: '连续签到获得更多曝光', action: '签到' }
+            ];
+            
+            // 随机选择3个推荐
+            const selectedRecs = recommendations.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const recCards = document.querySelectorAll('.recommendation-card');
+            
+            selectedRecs.forEach((rec, index) => {
+                if (recCards[index]) {
+                    recCards[index].querySelector('.rec-icon').textContent = rec.icon;
+                    recCards[index].querySelector('.rec-title').textContent = rec.title;
+                    recCards[index].querySelector('.rec-desc').textContent = rec.desc;
+                    recCards[index].querySelector('.rec-action').textContent = rec.action;
+                }
+            });
+        }
+        
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userInfo');
+            wx.showToast({
+                title: '已退出登录',
+                icon: 'success'
+            });
+            setTimeout(() => {
+                updateUIBasedOnLoginStatus();
+            }, 1000);
+        }
+        
+        // 轮播功能
+        let currentSlide = 0;
+        let slides, indicators, totalSlides;
+        let carouselInterval;
+        
+        function initCarouselElements() {
+            slides = document.querySelectorAll('.carousel-slide');
+            indicators = document.querySelectorAll('.carousel-indicator');
+            totalSlides = slides.length;
+            
+            console.log('轮播元素初始化:', {
+                slides: slides.length,
+                indicators: indicators.length,
+                totalSlides: totalSlides
+            });
+            
+            // 确保有轮播内容
+            if (slides.length === 0 || indicators.length === 0) {
+                console.error('轮播元素未找到！');
+                return false;
+            }
+            return true;
+        }
+        
+        function showSlide(index) {
+            console.log(`showSlide 被调用，目标索引: ${index}`);
+            console.log(`幻灯片总数: ${totalSlides}, 当前索引: ${currentSlide}`);
+            
+            if (!slides || !indicators || index < 0 || index >= totalSlides) {
+                console.error('showSlide: 无效的索引或元素未初始化', {
+                    index: index,
+                    totalSlides: totalSlides,
+                    slidesLength: slides ? slides.length : 0,
+                    indicatorsLength: indicators ? indicators.length : 0
+                });
+                return;
+            }
+            
+            // 移除所有active类
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+            });
+            
+            indicators.forEach((indicator, i) => {
+                indicator.classList.remove('active');
+            });
+            
+            // 添加active类到当前元素
+            if (slides[index]) {
+                slides[index].classList.add('active');
+            } else {
+                console.error(`幻灯片 ${index} 不存在`);
+            }
+            
+            if (indicators[index]) {
+                indicators[index].classList.add('active');
+            } else {
+                console.error(`指示器 ${index} 不存在`);
+            }
+        }
+        
+        function nextSlide() {
+            if (totalSlides <= 1) return;
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            if (totalSlides <= 1) return;
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+        
+        function goToSlide(index) {
+            console.log(`goToSlide 被调用，目标索引: ${index}`);
+            console.log(`当前幻灯片总数: ${totalSlides}`);
+            console.log(`当前幻灯片索引: ${currentSlide}`);
+            
+            if (index < 0 || index >= totalSlides) {
+                console.error('goToSlide: 无效的索引', index, '总数:', totalSlides);
+                return;
+            }
+            
+            // 停止自动轮播
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+                console.log('已停止自动轮播');
+            }
+            
+            // 更新当前幻灯片索引
+            const oldSlide = currentSlide;
+            currentSlide = index;
+            console.log(`幻灯片索引从 ${oldSlide} 切换到 ${currentSlide}`);
+            
+            // 显示目标幻灯片
+            showSlide(currentSlide);
+            
+            // 5秒后重新启动自动轮播
+            setTimeout(() => {
+                console.log('重新启动自动轮播');
+                startCarousel();
+            }, 5000);
+        }
+        
+        // 自动轮播
+        function startCarousel() {
+            // 清除现有的定时器
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+            }
+            
+            if (totalSlides > 1) {
+                carouselInterval = setInterval(nextSlide, 4000); // 每4秒切换一次
+                console.log('自动轮播已启动');
+            }
+        }
+        
+        // 初始化轮播指示器事件
+        function initCarouselIndicators() {
+            console.log('开始初始化轮播指示器事件...');
+            
+            // 重新获取指示器元素，确保获取到最新的DOM
+            indicators = document.querySelectorAll('.carousel-indicator');
+            
+            if (!indicators || indicators.length === 0) {
+                console.error('指示器元素未找到！');
+                return false;
+            }
+            
+            console.log(`找到 ${indicators.length} 个指示器元素`);
+            
+            indicators.forEach((indicator, index) => {
+                console.log(`处理指示器 ${index}:`, indicator);
+                console.log(`指示器 ${index} 的 data-slide 属性:`, indicator.getAttribute('data-slide'));
+                
+                // 清除所有现有的事件监听器
+                const newIndicator = indicator.cloneNode(true);
+                indicator.parentNode.replaceChild(newIndicator, indicator);
+                indicators[index] = newIndicator;
+                
+                // 添加点击事件监听器
+                newIndicator.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`指示器 ${index} 被点击，跳转到幻灯片 ${index}`);
+                    goToSlide(index);
+                });
+                
+                // 添加触摸事件支持移动设备
+                newIndicator.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`指示器 ${index} 被触摸，跳转到幻灯片 ${index}`);
+                    goToSlide(index);
+                });
+                
+                // 确保指示器可以接收焦点和键盘事件
+                newIndicator.setAttribute('tabindex', '0');
+                newIndicator.setAttribute('role', 'button');
+                newIndicator.setAttribute('aria-label', `跳转到第 ${index + 1} 张幻灯片`);
+                
+                // 添加键盘支持
+                newIndicator.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        console.log(`指示器 ${index} 键盘激活，跳转到幻灯片 ${index}`);
+                        goToSlide(index);
+                    }
+                });
+                
+                // 添加鼠标悬停效果
+                newIndicator.addEventListener('mouseenter', function() {
+                    console.log(`鼠标悬停在指示器 ${index} 上`);
+                });
+            });
+            
+            // 重新获取更新后的指示器元素
+            indicators = document.querySelectorAll('.carousel-indicator');
+            console.log('轮播指示器事件已绑定，共', indicators.length, '个指示器');
+            return true;
+        }
+        
+        // 指示器点击处理函数
+        function handleIndicatorClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const index = parseInt(e.target.getAttribute('data-slide'));
+            if (!isNaN(index)) {
+                console.log('点击指示器:', index);
+                goToSlide(index);
+            }
+        }
+        
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM内容已加载');
+            updateUIBasedOnLoginStatus();
+            
+            // 初始化搜索功能
+            initSearchFunction();
+            
+            // 延迟初始化轮播，确保DOM完全加载
+            setTimeout(() => {
+                console.log('开始初始化轮播功能...');
+                
+                if (initCarouselElements()) {
+                    initCarouselIndicators(); // 初始化轮播指示器
+                    startCarousel(); // 启动轮播
+                    console.log('轮播功能初始化完成');
+                } else {
+                    console.error('轮播功能初始化失败');
+                }
+            }, 200); // 增加延迟时间确保DOM完全渲染
+        });
+        
+        // 搜索功能初始化
+        function initSearchFunction() {
+            console.log('初始化搜索功能...');
+            
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const searchResultsList = document.getElementById('searchResultsList');
+            const filterIcon = document.getElementById('filterIcon');
+            
+            if (!searchInput || !searchResults || !searchResultsList) {
+                console.error('搜索元素未找到');
+                return;
+            }
+            
+            // 模拟搜索数据
+            const searchData = [
+                {
+                    title: "前端开发工程师",
+                    desc: "负责Web前端开发，熟悉React/Vue框架",
+                    category: "技术岗位"
+                },
+                {
+                    title: "产品经理",
+                    desc: "负责产品规划和需求分析，有互联网产品经验",
+                    category: "产品岗位"
+                },
+                {
+                    title: "UI设计师",
+                    desc: "负责界面设计和用户体验优化",
+                    category: "设计岗位"
+                },
+                {
+                    title: "数据分析师",
+                    desc: "负责数据挖掘和业务分析，熟悉Python/SQL",
+                    category: "数据岗位"
+                },
+                {
+                    title: "运营专员",
+                    desc: "负责用户运营和活动策划，有社交媒体经验",
+                    category: "运营岗位"
+                },
+                {
+                    title: "Java开发工程师",
+                    desc: "负责后端服务开发，熟悉Spring框架",
+                    category: "技术岗位"
+                }
+            ];
+            
+            // 搜索输入事件
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim().toLowerCase();
+                
+                if (query.length === 0) {
+                    hideSearchResults();
+                    return;
+                }
+                
+                // 过滤搜索结果
+                const filteredResults = searchData.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.desc.toLowerCase().includes(query) ||
+                    item.category.toLowerCase().includes(query)
+                );
+                
+                displaySearchResults(filteredResults, query);
+            });
+            
+            // 点击搜索框外部隐藏结果
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    hideSearchResults();
+                }
+            });
+            
+            // 筛选图标点击事件
+            filterIcon.addEventListener('click', function() {
+                console.log('点击筛选图标');
+                // 这里可以添加筛选功能
+                alert('筛选功能开发中...');
+            });
+            
+            // 搜索框获得焦点时的处理
+            searchInput.addEventListener('focus', function() {
+                if (searchInput.value.trim().length > 0) {
+                    searchResults.style.display = 'block';
+                }
+            });
+            
+            console.log('搜索功能初始化完成');
+        }
+        
+        // 显示搜索结果
+        function displaySearchResults(results, query) {
+            const searchResults = document.getElementById('searchResults');
+            const searchResultsList = document.getElementById('searchResultsList');
+            const resultsCount = document.querySelector('.results-count');
+            
+            if (results.length === 0) {
+                searchResultsList.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="search-result-title">未找到相关结果</div>
+                        <div class="search-result-desc">请尝试其他关键词</div>
+                    </div>
+                `;
+                resultsCount.textContent = '未找到结果';
+            } else {
+                searchResultsList.innerHTML = results.map(item => `
+                    <div class="search-result-item" onclick="selectSearchResult('${item.title}')">
+                        <div class="search-result-title">${highlightText(item.title, query)}</div>
+                        <div class="search-result-desc">${highlightText(item.desc, query)}</div>
+                        <div class="search-result-category">${item.category}</div>
+                    </div>
+                `).join('');
+                resultsCount.textContent = `找到 ${results.length} 个结果`;
+            }
+            
+            searchResults.style.display = 'block';
+        }
+        
+        // 隐藏搜索结果
+        function hideSearchResults() {
+            const searchResults = document.getElementById('searchResults');
+            searchResults.style.display = 'none';
+        }
+        
+        // 高亮搜索关键词
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span style="background-color: #FFE4E1; color: #FF6B9D; font-weight: bold;">$1</span>');
+        }
+        
+        // 选择搜索结果
+        function selectSearchResult(title) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = title;
+            hideSearchResults();
+            console.log('选择了搜索结果:', title);
+            // 这里可以添加跳转到详情页的逻辑
+        }
+        
+        // 窗口加载完成后再次检查
+        window.addEventListener('load', function() {
+            console.log('窗口完全加载完成');
+            
+            // 如果轮播还没有初始化，再次尝试
+            setTimeout(() => {
+                if (!slides || slides.length === 0) {
+                    console.log('重新尝试初始化轮播...');
+                    if (initCarouselElements()) {
+                        initCarouselIndicators();
+                        startCarousel();
+                        console.log('轮播功能重新初始化完成');
+                    }
+                }
+            }, 100);
+        });
+        
+        console.log('🚀 页面加载完成:', 'home');
+        console.log('📊 页面数据:', pageData);
+    </script>
+    
+    <!-- 运营入口 -->
+    <div class="admin-entry" id="adminEntry">
+        <span class="admin-entry-icon">⚙️</span>
+    </div>
+    
+    <!-- 背景编辑面板 -->
+    <div class="background-editor" id="backgroundEditor">
+        <div class="editor-panel">
+            <h3 class="editor-title">背景设置</h3>
+            
+            <div class="editor-section">
+                <label class="editor-label">上传背景图片</label>
+                <div class="file-input-wrapper">
+                    <input type="file" class="file-input" id="backgroundFile" accept="image/*" capture="environment" style="display: none;">
+                    <div class="file-input-button" id="fileInputButton">
+                        <span>📷</span>
+                        <span>选择图片</span>
+                    </div>
+                </div>
+                <img class="preview-image" id="previewImage" alt="预览">
+            </div>
+            
+            <div class="editor-section">
+                <label class="editor-label">预设渐变背景</label>
+                <div class="gradient-options">
+                    <div class="gradient-option selected" data-gradient="linear-gradient(135deg, #4F46E5, #F59E0B)" style="background: linear-gradient(135deg, #4F46E5, #F59E0B);"></div>
+                    <div class="gradient-option" data-gradient="linear-gradient(135deg, #667eea, #764ba2)" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                    <div class="gradient-option" data-gradient="linear-gradient(135deg, #f093fb, #f5576c)" style="background: linear-gradient(135deg, #f093fb, #f5576c);"></div>
+                    <div class="gradient-option" data-gradient="linear-gradient(135deg, #4facfe, #00f2fe)" style="background: linear-gradient(135deg, #4facfe, #00f2fe);"></div>
+                    <div class="gradient-option" data-gradient="linear-gradient(135deg, #43e97b, #38f9d7)" style="background: linear-gradient(135deg, #43e97b, #38f9d7);"></div>
+                    <div class="gradient-option" data-gradient="linear-gradient(135deg, #fa709a, #fee140)" style="background: linear-gradient(135deg, #fa709a, #fee140);"></div>
+                </div>
+            </div>
+            
+            <div class="editor-buttons">
+                <button class="editor-button secondary" onclick="closeBackgroundEditor()">取消</button>
+                <button class="editor-button primary" onclick="applyBackground()">应用</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <div class="nav-items">
+            <div class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">首页</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">💝</span>
+                <span class="nav-label">匹配</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">消息</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">我的</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 背景编辑功能
+        let currentBackgroundType = 'gradient';
+        let currentBackgroundValue = 'linear-gradient(135deg, #4F46E5, #F59E0B)';
+        let selectedGradient = 'linear-gradient(135deg, #4F46E5, #F59E0B)';
+        let uploadedImageUrl = null;
+        
+        // 显示运营入口（连续点击3次页面标题）
+        let titleClickCount = 0;
+        const brandTextElement = document.querySelector('.brand-text');
+        if (brandTextElement) {
+            brandTextElement.addEventListener('click', function() {
+                titleClickCount++;
+                if (titleClickCount >= 3) {
+                    document.getElementById('adminEntry').classList.add('visible');
+                    titleClickCount = 0;
+                    // 微信小程序环境下的提示
+                    if (typeof wx !== 'undefined') {
+                        wx.showToast({
+                            title: '运营模式已开启',
+                            icon: 'success'
+                        });
+                    } else {
+                        alert('运营模式已开启');
+                    }
+                }
+            });
+        }
+        
+        // 运营入口点击事件 - 显示操作菜单
+        document.getElementById('adminEntry').addEventListener('click', function() {
+            // 创建操作菜单
+            const actionMenu = document.createElement('div');
+            actionMenu.className = 'admin-action-menu';
+            actionMenu.innerHTML = `
+                <div class="action-menu-overlay"></div>
+                <div class="action-menu-content">
+                    <div class="action-menu-title">运营管理</div>
+                    <div class="action-menu-item" onclick="openBackgroundEditor()">
+                        <span class="action-icon">🎨</span>
+                        <span>背景设置</span>
+                    </div>
+                    <div class="action-menu-item" onclick="openCarouselManager()">
+                        <span class="action-icon">🖼️</span>
+                        <span>轮播管理</span>
+                    </div>
+                    <div class="action-menu-item cancel" onclick="closeActionMenu()">
+                        <span class="action-icon">❌</span>
+                        <span>取消</span>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(actionMenu);
+            
+            // 添加关闭事件
+            actionMenu.querySelector('.action-menu-overlay').addEventListener('click', closeActionMenu);
+        });
+        
+        // 打开背景编辑器
+        function openBackgroundEditor() {
+            closeActionMenu();
+            document.getElementById('backgroundEditor').classList.add('active');
+        }
+        
+        // 打开轮播管理页面
+        function openCarouselManager() {
+            closeActionMenu();
+            window.open('admin.html', '_blank');
+        }
+        
+        // 关闭操作菜单
+        function closeActionMenu() {
+            const actionMenu = document.querySelector('.admin-action-menu');
+            if (actionMenu) {
+                actionMenu.remove();
+            }
+        }
+        
+        // 关闭背景编辑器
+        function closeBackgroundEditor() {
+            document.getElementById('backgroundEditor').classList.remove('active');
+        }
+        
+        // 点击背景遮罩关闭编辑器
+        document.getElementById('backgroundEditor').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBackgroundEditor();
+            }
+        });
+        
+        // 文件上传处理
+        document.getElementById('backgroundFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 检查文件大小（限制为2MB）
+                if (file.size > 2 * 1024 * 1024) {
+                    if (typeof wx !== 'undefined') {
+                        wx.showToast({
+                            title: '图片大小不能超过2MB',
+                            icon: 'none'
+                        });
+                    } else {
+                        alert('图片大小不能超过2MB');
+                    }
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImageUrl = e.target.result;
+                    document.getElementById('previewImage').src = uploadedImageUrl;
+                    document.getElementById('previewImage').style.display = 'block';
+                    currentBackgroundType = 'image';
+                    currentBackgroundValue = uploadedImageUrl;
+                    
+                    // 取消渐变选择
+                    document.querySelectorAll('.gradient-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 渐变选择处理
+        document.querySelectorAll('.gradient-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.gradient-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedGradient = this.dataset.gradient;
+                currentBackgroundType = 'gradient';
+                currentBackgroundValue = selectedGradient;
+                
+                // 隐藏图片预览
+                document.getElementById('previewImage').style.display = 'none';
+            });
+        });
+        
+        // 应用背景
+        function applyBackground() {
+            const pageContainer = document.querySelector('.page-container');
+            
+            if (currentBackgroundType === 'image' && uploadedImageUrl) {
+                pageContainer.style.background = `url(${uploadedImageUrl})`;
+                pageContainer.classList.add('custom-background');
+                
+                // 保存到本地存储
+                localStorage.setItem('customBackground', JSON.stringify({
+                    type: 'image',
+                    value: uploadedImageUrl
+                }));
+            } else if (currentBackgroundType === 'gradient') {
+                pageContainer.style.background = currentBackgroundValue;
+                pageContainer.classList.remove('custom-background');
+                
+                // 保存到本地存储
+                localStorage.setItem('customBackground', JSON.stringify({
+                    type: 'gradient',
+                    value: currentBackgroundValue
+                }));
+            }
+            
+            closeBackgroundEditor();
+            
+            // 微信小程序环境下的提示
+            if (typeof wx !== 'undefined') {
+                wx.showToast({
+                    title: '背景已更新',
+                    icon: 'success'
+                });
+            } else {
+                alert('背景已更新');
+            }
+        }
+        
+        // 页面加载时恢复背景设置
+        function loadSavedBackground() {
+            const savedBackground = localStorage.getItem('customBackground');
+            if (savedBackground) {
+                try {
+                    const bgData = JSON.parse(savedBackground);
+                    const pageContainer = document.querySelector('.page-container');
+                    
+                    if (bgData.type === 'image') {
+                        pageContainer.style.background = `url(${bgData.value})`;
+                        pageContainer.classList.add('custom-background');
+                    } else if (bgData.type === 'gradient') {
+                        pageContainer.style.background = bgData.value;
+                        pageContainer.classList.remove('custom-background');
+                    }
+                } catch (e) {
+                    console.error('加载背景设置失败:', e);
+                }
+            }
+        }
+        
+        // 微信小程序兼容性处理
+        function initWeChatCompatibility() {
+            console.log('初始化微信兼容性处理');
+            
+            // 更严格的微信环境检测
+            const isWeChatMiniProgram = typeof wx !== 'undefined' && 
+                                      typeof wx.chooseImage === 'function' && 
+                                      typeof wx.getSystemInfo === 'function';
+            
+            if (isWeChatMiniProgram) {
+                console.log('检测到微信小程序环境');
+                // 替换文件上传为微信小程序的图片选择
+                const backgroundFile = document.getElementById('backgroundFile');
+                if (backgroundFile) {
+                    backgroundFile.style.display = 'none';
+                }
+                
+                const fileInputButton = document.getElementById('fileInputButton');
+                if (fileInputButton) {
+                    fileInputButton.addEventListener('click', function() {
+                        console.log('微信环境下点击选择图片按钮');
+                        wx.chooseImage({
+                            count: 1,
+                            sizeType: ['compressed', 'original'],
+                            sourceType: ['album', 'camera'],
+                            success: function(res) {
+                                const tempFilePath = res.tempFilePaths[0];
+                                uploadedImageUrl = tempFilePath;
+                                const previewImage = document.getElementById('previewImage');
+                                if (previewImage) {
+                                    previewImage.src = tempFilePath;
+                                    previewImage.style.display = 'block';
+                                }
+                                currentBackgroundType = 'image';
+                                currentBackgroundValue = tempFilePath;
+                                
+                                // 取消渐变选择
+                                document.querySelectorAll('.gradient-option').forEach(option => {
+                                    option.classList.remove('selected');
+                                });
+                            },
+                            fail: function(err) {
+                                console.error('微信选择图片失败:', err);
+                                wx.showToast({
+                                    title: '选择图片失败',
+                                    icon: 'none'
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    console.error('找不到fileInputButton元素');
+                }
+            } else {
+                console.log('检测到普通浏览器环境');
+                // 普通浏览器环境下的文件选择
+                // 检测是否为移动设备
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                console.log('是否为移动设备:', isMobile);
+                
+                const fileInputButton = document.getElementById('fileInputButton');
+                if (!fileInputButton) {
+                    console.error('找不到fileInputButton元素');
+                    return;
+                }
+                
+                fileInputButton.addEventListener('click', function() {
+                    console.log('普通浏览器环境下点击选择图片按钮');
+                    
+                    // 为移动设备提供选择相机或相册的选项
+                    if (isMobile) {
+                        console.log('显示移动设备选择菜单');
+                        // 创建一个临时的选择菜单
+                        const actionSheet = document.createElement('div');
+                        actionSheet.style.cssText = `
+                            position: fixed;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            background: white;
+                            border-radius: 12px 12px 0 0;
+                            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+                            z-index: 10000;
+                            padding: 20px;
+                            transform: translateY(100%);
+                            transition: transform 0.3s ease;
+                        `;
+                        
+                        actionSheet.innerHTML = `
+                            <div style="text-align: center; margin-bottom: 20px; font-size: 16px; font-weight: bold;">选择图片</div>
+                            <button id="cameraBtn" style="width: 100%; padding: 15px; margin-bottom: 10px; background: #4F46E5; color: white; border: none; border-radius: 8px; font-size: 16px;">拍照</button>
+                            <button id="albumBtn" style="width: 100%; padding: 15px; margin-bottom: 10px; background: #4F46E5; color: white; border: none; border-radius: 8px; font-size: 16px;">从相册选择</button>
+                            <button id="cancelBtn" style="width: 100%; padding: 15px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; font-size: 16px;">取消</button>
+                        `;
+                        
+                        document.body.appendChild(actionSheet);
+                        
+                        // 显示动画
+                        setTimeout(() => {
+                            actionSheet.style.transform = 'translateY(0)';
+                        }, 10);
+                        
+                        // 拍照按钮
+                        document.getElementById('cameraBtn').addEventListener('click', function() {
+                            console.log('点击拍照按钮');
+                            const fileInput = document.getElementById('backgroundFile');
+                            fileInput.setAttribute('capture', 'environment');
+                            fileInput.click();
+                            document.body.removeChild(actionSheet);
+                        });
+                        
+                        // 相册按钮
+                        document.getElementById('albumBtn').addEventListener('click', function() {
+                            console.log('点击相册按钮');
+                            const fileInput = document.getElementById('backgroundFile');
+                            fileInput.removeAttribute('capture');
+                            fileInput.click();
+                            document.body.removeChild(actionSheet);
+                        });
+                        
+                        // 取消按钮
+                        document.getElementById('cancelBtn').addEventListener('click', function() {
+                            console.log('点击取消按钮');
+                            actionSheet.style.transform = 'translateY(100%)';
+                            setTimeout(() => {
+                                document.body.removeChild(actionSheet);
+                            }, 300);
+                        });
+                    } else {
+                        console.log('桌面设备直接打开文件选择');
+                        // 桌面设备直接打开文件选择
+                        const fileInput = document.getElementById('backgroundFile');
+                        if (fileInput) {
+                            fileInput.click();
+                        } else {
+                            console.error('找不到backgroundFile元素');
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 立即加入按钮跳转到登录页面
+        function initJoinButton() {
+            const joinButton = document.querySelector('.join-button');
+            if (joinButton) {
+                joinButton.addEventListener('click', function() {
+                    window.location.href = 'login.html';
+                });
+            }
+        }
+        
+        // 加载保存的轮播文字内容
+        function loadSavedCarouselTexts() {
+            const savedTexts = localStorage.getItem('carouselTexts');
+            if (savedTexts) {
+                try {
+                    const carouselTexts = JSON.parse(savedTexts);
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    
+                    console.log('加载保存的轮播文字:', carouselTexts);
+                    
+                    // 只更新轮播1的文字内容（index为0）
+                    if (carouselTexts[0] && slides[0]) {
+                        const brandInfo = slides[0].querySelector('.brand-info');
+                        if (brandInfo) {
+                            // 获取字体颜色
+                            const fontColor = carouselTexts[0].fontColor || '#ffffff';
+                            
+                            // 更新标题
+                            const titleElement = brandInfo.querySelector('h3');
+                            if (titleElement && carouselTexts[0].title) {
+                                titleElement.textContent = carouselTexts[0].title;
+                                titleElement.style.color = fontColor;
+                            }
+                            
+                            // 更新副标题
+                            const subtitleElement = brandInfo.querySelector('.brand-desc');
+                            if (subtitleElement && carouselTexts[0].subtitle) {
+                                subtitleElement.textContent = carouselTexts[0].subtitle;
+                                subtitleElement.style.color = fontColor;
+                            }
+                            
+                            // 更新详细描述
+                            const descriptionElement = brandInfo.querySelector('.brand-detail');
+                            if (descriptionElement && carouselTexts[0].description) {
+                                descriptionElement.textContent = carouselTexts[0].description;
+                                descriptionElement.style.color = fontColor;
+                            }
+                            
+                            // 更新品牌标语
+                            const sloganElement = brandInfo.querySelector('.brand-slogan');
+                            if (sloganElement && carouselTexts[0].slogan) {
+                                sloganElement.textContent = carouselTexts[0].slogan;
+                                sloganElement.style.color = fontColor;
+                            }
+                        }
+                    }
+                    
+                } catch (e) {
+                    console.error('加载轮播文字失败:', e);
+                }
+            }
+        }
+        
+        // 加载保存的轮播图片
+        function loadSavedCarouselImages() {
+            const savedImages = localStorage.getItem('carouselImages');
+            if (savedImages) {
+                try {
+                    const imageUrls = JSON.parse(savedImages);
+                    const slides = document.querySelectorAll('.carousel-slide');
+                    
+                    console.log('加载保存的轮播图片:', imageUrls);
+                    
+                    // 更新轮播图片 - 为所有页面设置背景图片
+                    imageUrls.forEach((imageUrl, index) => {
+                        if (imageUrl && slides[index]) { // 为所有页面设置背景
+                            const slideContent = slides[index].querySelector('.slide-content');
+                            if (slideContent) {
+                                // 创建图片背景样式的轮播
+                                slideContent.style.backgroundImage = `url(${imageUrl})`;
+                                slideContent.style.backgroundSize = 'cover';
+                                slideContent.style.backgroundPosition = 'center';
+                                slideContent.style.backgroundRepeat = 'no-repeat';
+                                
+                                // 添加半透明遮罩以确保文字可读性
+                                const overlay = document.createElement('div');
+                                overlay.style.cssText = `
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+                                    z-index: 1;
+                                `;
+                                slideContent.style.position = 'relative';
+                                slideContent.insertBefore(overlay, slideContent.firstChild);
+                                
+                                // 确保内容在遮罩之上
+                                const slideLeft = slideContent.querySelector('.slide-left');
+                                const slideRight = slideContent.querySelector('.slide-right');
+                                if (slideLeft) {
+                                    slideLeft.style.position = 'relative';
+                                    slideLeft.style.zIndex = '2';
+                                }
+                                if (slideRight) {
+                                    slideRight.style.position = 'relative';
+                                    slideRight.style.zIndex = '2';
+                                }
+                            }
+                        }
+                    });
+                    
+                    // 重新初始化轮播功能
+                    setTimeout(() => {
+                        initCarouselElements();
+                        showSlide(0);
+                        startCarousel();
+                    }, 100);
+                    
+                } catch (e) {
+                    console.error('加载轮播图片失败:', e);
+                }
+            }
+        }
+        
+        // 会员头像轮播功能
+        function initMembersCarousel() {
+            // 会员数据 - 使用本地头像或更可靠的图片源
+            const membersData = [
+                { id: 1, name: 'Ryan', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9SeWFuIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0U4QzRBMDtzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Q0QTU3NDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhhaXJHcmFkaWVudF9SeWFuIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMUExQTFBO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwO3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgICAgIDwhLS0g6Zi05b2x5ruk6ZWcIC0tPgogICAgICAgICAgICA8ZmlsdGVyIGlkPSJzaGFkb3dfUnlhbiIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjNEY3OUE0Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMyLDIyIFEyOCwxMiAzOCwxMCBRNTAsOCA2MiwxMCBRNzIsMTIgNjgsMjIgUTY4LDE4IDYyLDE1IFE1MCwxMiAzOCwxNSBRMzIsMTggMzIsMjIiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X1J5YW4pIiBmaWx0ZXI9InVybCgjc2hhZG93X1J5YW4pIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDohLjpg6jova7lu5MgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDI1IFEzOCwxOCA0MiwxNiBRNTAsMTQgNTgsMTYgUTYyLDE4IDYyLDI1IFE2MiwzOCA1OCw0NiBRNTAsNDkgNDIsNDYgUTM4LDM4IDM4LDI1IiBmaWxsPSJ1cmwoI2ZhY2VHcmFkaWVudF9SeWFuKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19SeWFuKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55y8552bIC0tPgogICAgICAgIDxlbGxpcHNlIGN4PSI0MyIgY3k9IjMyIiByeD0iNCIgcnk9IjMiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjU3IiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOees+WtlCAtLT4KICAgICAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTciIGN5PSIzMiIgcj0iMiIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIDwhLS0g6auY5YWJIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQ0IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjMxIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPCEtLSDnnLznnavmr5sgLS0+CiAgICAgICAgPHBhdGggZD0iTTM5LDMwIFE0MywyOSA0NywzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik01MywzMCBRNTcsMjkgNjEsMzAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecieavmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDAsMjggTDQ2LDI3IE01NCwyNyBMNjAsMjgiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDpvLvlrZAgLS0+CiAgICAgICAgPHBhdGggZD0iTTUwLDM1IEw1MCw0MCBNNDksNDAgUTUwLDQxIDUxLDQwIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDpvLvnv7zpmLTlvbEgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzkiIHJ4PSIxIiByeT0iMC41IiBmaWxsPSIjRDRBNTc0IiBvcGFjaXR5PSIwLjUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTIiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g5Zi05be0IC0tPgogICAgICAgIDxwYXRoIGQ9Ik00Niw0NCBRNTAsNDYgNTQsNDQiIHN0cm9rZT0iI0M0NzU2QiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDkuIvllIcgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ3LDQ1IFE1MCw0Ni41IDUzLDQ1IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43Ii8+CiAgICAgICAgPCEtLSDpnaLpg6jova7lu5PpmLTlvbEgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDQyIFE0Miw0NSA0Niw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgPHBhdGggZD0iTTU0LDQyIFE1OCw0NSA2Miw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiBmaWx0ZXI9InVybCgjc2hhZG93X1J5YW4pIj5SPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 2, name: 'Yuki', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9ZdWtpIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Y1RTZEMztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Q0QTU3NDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhhaXJHcmFkaWVudF9ZdWtpIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMkQxQjBFO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwO3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgICAgIDwhLS0g6Zi05b2x5ruk6ZWcIC0tPgogICAgICAgICAgICA8ZmlsdGVyIGlkPSJzaGFkb3dfWXVraSIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjRUQ1NDhDIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMwLDIwIFEyNSwxMCAzNSw4IFE1MCw1IDY1LDggUTc1LDEwIDcwLDIwIFE3MCwxNSA2NSwxMiBRNTAsOCAzNSwxMiBRMzAsMTUgMzAsMjAiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X1l1a2kpIiBmaWx0ZXI9InVybCgjc2hhZG93X1l1a2kpIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDohLjpg6jova7lu5MgLS0+CiAgICAgICAgPHBhdGggZD0iTTM1LDI1IFEzNSwyMCA0MCwxOCBRNTAsMTUgNjAsMTggUTY1LDIwIDY1LDI1IFE2NSwzNSA2MCw0NSBRNTAsNDggNDAsNDUgUTM1LDM1IDM1LDI1IiBmaWxsPSJ1cmwoI2ZhY2VHcmFkaWVudF9ZdWtpKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19ZdWtpKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55y8552bIC0tPgogICAgICAgIDxlbGxpcHNlIGN4PSI0MyIgY3k9IjMyIiByeD0iNCIgcnk9IjMiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjU3IiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOees+WtlCAtLT4KICAgICAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTciIGN5PSIzMiIgcj0iMiIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIDwhLS0g6auY5YWJIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQ0IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjMxIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPCEtLSDnnLznnavmr5sgLS0+CiAgICAgICAgPHBhdGggZD0iTTM5LDMwIFE0MywyOSA0NywzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik01MywzMCBRNTcsMjkgNjEsMzAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecieavmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDAsMjggUTQzLDI2IDQ2LDI4IE01NCwyOCBRNTcsMjYgNjAsMjgiIHN0cm9rZT0iIzJEMUIwRSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDpvLvlrZAgLS0+CiAgICAgICAgPHBhdGggZD0iTTUwLDM1IEw1MCw0MCBNNDksNDAgUTUwLDQxIDUxLDQwIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDpvLvnv7zpmLTlvbEgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzkiIHJ4PSIxIiByeT0iMC41IiBmaWxsPSIjRDRBNTc0IiBvcGFjaXR5PSIwLjUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTIiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g5Zi05be0IC0tPgogICAgICAgIDxwYXRoIGQ9Ik00Niw0NCBRNTAsNDYgNTQsNDQiIHN0cm9rZT0iI0Q0NzU2QiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDkuIvllIcgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ3LDQ1IFE1MCw0Ni41IDUzLDQ1IiBzdHJva2U9IiNENDc1NkIiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43Ii8+CiAgICAgICAgPCEtLSDohLjpoornuqLmmZUgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjM4IiBjeT0iMzgiIHJ4PSIzIiByeT0iMiIgZmlsbD0iI0Y0QTRBNCIgb3BhY2l0eT0iMC40Ii8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjYyIiBjeT0iMzgiIHJ4PSIzIiByeT0iMiIgZmlsbD0iI0Y0QTRBNCIgb3BhY2l0eT0iMC40Ii8+CiAgICAgICAgPCEtLSDpnaLpg6jova7lu5PpmLTlvbEgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDQyIFE0Miw0NSA0Niw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgPHBhdGggZD0iTTU0LDQyIFE1OCw0NSA2Miw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiBmaWx0ZXI9InVybCgjc2hhZG93X1l1a2kpIj5ZPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 3, name: 'Victor', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9WaWN0b3IiIGN4PSI1MCUiIGN5PSI0MCUiIHI9IjYwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRDRBNTc0O3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojRDRBNTc0O3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvcmFkaWFsR3JhZGllbnQ+CiAgICAgICAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iaGFpckdyYWRpZW50X1ZpY3RvciIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzRBMkMxNztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzAwMDAwMDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgICAgICAgICA8IS0tIOmYtOW9sea7pOmVnCAtLT4KICAgICAgICAgICAgPGZpbHRlciBpZD0ic2hhZG93X1ZpY3RvciIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjMTBCOTgxIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMyLDIyIFEyOCwxMiAzOCwxMCBRNTAsOCA2MiwxMCBRNzIsMTIgNjgsMjIgUTY4LDE4IDYyLDE1IFE1MCwxMiAzOCwxNSBRMzIsMTggMzIsMjIiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X1ZpY3RvcikiIGZpbHRlcj0idXJsKCNzaGFkb3dfVmljdG9yKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6IS46YOo6L2u5buTIC0tPgogICAgICAgIDxwYXRoIGQ9Ik0zOCwyNSBRMzgsMTggNDIsMTYgUTUwLDE0IDU4LDE2IFE2MiwxOCA2MiwyNSBRNjIsMzggNTgsNDYgUTUwLDQ5IDQyLDQ2IFEzOCwzOCAzOCwyNSIgZmlsbD0idXJsKCNmYWNlR3JhZGllbnRfVmljdG9yKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19WaWN0b3IpIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDnnLznnZsgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQzIiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTciIGN5PSIzMiIgcng9IjQiIHJ5PSIzIiBmaWxsPSJ3aGl0ZSIvPgogICAgICAgIDwhLS0g556z5a2UIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQzIiBjeT0iMzIiIHI9IjIiIGZpbGw9IiMyQzE4MTAiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1NyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPCEtLSDpq5jlhYkgLS0+CiAgICAgICAgPGNpcmNsZSBjeD0iNDQiIGN5PSIzMSIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIvPgogICAgICAgIDxjaXJjbGUgY3g9IjU4IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOecvOedq+avmyAtLT4KICAgICAgICA8cGF0aCBkPSJNMzksMzAgUTQzLDI5IDQ3LDMwIiBzdHJva2U9IiMxQTFBMUEiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIi8+CiAgICAgICAgPHBhdGggZD0iTTUzLDMwIFE1NywyOSA2MSwzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55yJ5q+bIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MCwyOCBMNDYsMjcgTTU0LDI3IEw2MCwyOCIgc3Ryb2tlPSIjNEEyQzE3IiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOm8u+WtkCAtLT4KICAgICAgICA8cGF0aCBkPSJNNTAsMzUgTDUwLDQwIE00OSw0MCBRNTAsNDEgNTEsNDAiIHN0cm9rZT0iI0M0QTU3NCIgc3Ryb2tlLXdpZHRoPSIxLjIiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8IS0tIOm8u+e/vOmYtOW9sSAtLT4KICAgICAgICA8ZWxsaXBzZSBjeD0iNDgiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIDxlbGxpcHNlIGN4PSI1MiIgY3k9IjM5IiByeD0iMSIgcnk9IjAuNSIgZmlsbD0iI0Q0QTU3NCIgb3BhY2l0eT0iMC41Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlmLTlt7QgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ2LDQ0IFE1MCw0NiA1NCw0NCIgc3Ryb2tlPSIjQzQ3NTZCIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8IS0tIOS4i+WUhyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDcsNDUgUTUwLDQ2LjUgNTMsNDUiIHN0cm9rZT0iI0M0NzU2QiIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjciLz4KICAgICAgICA8IS0tIOmdoumDqOi9ruW7k+mYtOW9sSAtLT4KICAgICAgICA8cGF0aCBkPSJNMzgsNDIgUTQyLDQ1IDQ2LDQyIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjYiLz4KICAgICAgICA8cGF0aCBkPSJNNTQsNDIgUTU4LDQ1IDYyLDQyIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjYiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWtl+avjeagh+ivhiAtLT4KICAgICAgICA8dGV4dCB4PSI1MCIgeT0iNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNGRkZGRkYiIGZpbHRlcj0idXJsKCNzaGFkb3dfVmljdG9yKSI+VjwvdGV4dD4KICAgIDwvc3ZnPg==' },
+                { id: 4, name: 'Jack', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9KYWNrIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0U2Qjg4NztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Q0QTU3NDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhhaXJHcmFkaWVudF9KYWNrIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMUExQTFBO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwO3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgICAgIDwhLS0g6Zi05b2x5ruk6ZWcIC0tPgogICAgICAgICAgICA8ZmlsdGVyIGlkPSJzaGFkb3dfSmFjayIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjRjU5RTBCIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMyLDIyIFEyOCwxMiAzOCwxMCBRNTAsOCA2MiwxMCBRNzIsMTIgNjgsMjIgUTY4LDE4IDYyLDE1IFE1MCwxMiAzOCwxNSBRMzIsMTggMzIsMjIiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X0phY2spIiBmaWx0ZXI9InVybCgjc2hhZG93X0phY2spIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDohLjpg6jova7lu5MgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDI1IFEzOCwxOCA0MiwxNiBRNTAsMTQgNTgsMTYgUTYyLDE4IDYyLDI1IFE2MiwzOCA1OCw0NiBRNTAsNDkgNDIsNDYgUTM4LDM4IDM4LDI1IiBmaWxsPSJ1cmwoI2ZhY2VHcmFkaWVudF9KYWNrKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19KYWNrKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55y8552bIC0tPgogICAgICAgIDxlbGxpcHNlIGN4PSI0MyIgY3k9IjMyIiByeD0iNCIgcnk9IjMiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjU3IiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOees+WtlCAtLT4KICAgICAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTciIGN5PSIzMiIgcj0iMiIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIDwhLS0g6auY5YWJIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQ0IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjMxIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPCEtLSDnnLznnavmr5sgLS0+CiAgICAgICAgPHBhdGggZD0iTTM5LDMwIFE0MywyOSA0NywzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik01MywzMCBRNTcsMjkgNjEsMzAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecieavmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDAsMjggTDQ2LDI3IE01NCwyNyBMNjAsMjgiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDpvLvlrZAgLS0+CiAgICAgICAgPHBhdGggZD0iTTUwLDM1IEw1MCw0MCBNNDksNDAgUTUwLDQxIDUxLDQwIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDpvLvnv7zpmLTlvbEgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzkiIHJ4PSIxIiByeT0iMC41IiBmaWxsPSIjRDRBNTc0IiBvcGFjaXR5PSIwLjUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTIiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g5Zi05be0IC0tPgogICAgICAgIDxwYXRoIGQ9Ik00Niw0NCBRNTAsNDYgNTQsNDQiIHN0cm9rZT0iI0M0NzU2QiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDkuIvllIcgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ3LDQ1IFE1MCw0Ni41IDUzLDQ1IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43Ii8+CiAgICAgICAgPCEtLSDpnaLpg6jova7lu5PpmLTlvbEgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDQyIFE0Miw0NSA0Niw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgPHBhdGggZD0iTTU0LDQyIFE1OCw0NSA2Miw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiBmaWx0ZXI9InVybCgjc2hhZG93X0phY2spIj5KPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 5, name: 'Ivan', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9JdmFuIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Y1RTZEMztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Q0QTU3NDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhhaXJHcmFkaWVudF9JdmFuIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNEEyQzE3O3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwO3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgICAgIDwhLS0g6Zi05b2x5ruk6ZWcIC0tPgogICAgICAgICAgICA8ZmlsdGVyIGlkPSJzaGFkb3dfSXZhbiIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjOEI1Q0Y2Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMyLDIyIFEyOCwxMiAzOCwxMCBRNTAsOCA2MiwxMCBRNzIsMTIgNjgsMjIgUTY4LDE4IDYyLDE1IFE1MCwxMiAzOCwxNSBRMzIsMTggMzIsMjIiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X0l2YW4pIiBmaWx0ZXI9InVybCgjc2hhZG93X0l2YW4pIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDohLjpg6jova7lu5MgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDI1IFEzOCwxOCA0MiwxNiBRNTAsMTQgNTgsMTYgUTYyLDE4IDYyLDI1IFE2MiwzOCA1OCw0NiBRNTAsNDkgNDIsNDYgUTM4LDM4IDM4LDI1IiBmaWxsPSJ1cmwoI2ZhY2VHcmFkaWVudF9JdmFuKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19JdmFuKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55y8552bIC0tPgogICAgICAgIDxlbGxpcHNlIGN4PSI0MyIgY3k9IjMyIiByeD0iNCIgcnk9IjMiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjU3IiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOees+WtlCAtLT4KICAgICAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTciIGN5PSIzMiIgcj0iMiIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIDwhLS0g6auY5YWJIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQ0IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjMxIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPCEtLSDnnLznnavmr5sgLS0+CiAgICAgICAgPHBhdGggZD0iTTM5LDMwIFE0MywyOSA0NywzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik01MywzMCBRNTcsMjkgNjEsMzAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecieavmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDAsMjggTDQ2LDI3IE01NCwyNyBMNjAsMjgiIHN0cm9rZT0iIzRBMkMxNyIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDpvLvlrZAgLS0+CiAgICAgICAgPHBhdGggZD0iTTUwLDM1IEw1MCw0MCBNNDksNDAgUTUwLDQxIDUxLDQwIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDpvLvnv7zpmLTlvbEgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzkiIHJ4PSIxIiByeT0iMC41IiBmaWxsPSIjRDRBNTc0IiBvcGFjaXR5PSIwLjUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTIiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g5Zi05be0IC0tPgogICAgICAgIDxwYXRoIGQ9Ik00Niw0NCBRNTAsNDYgNTQsNDQiIHN0cm9rZT0iI0M0NzU2QiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDkuIvllIcgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ3LDQ1IFE1MCw0Ni41IDUzLDQ1IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43Ii8+CiAgICAgICAgPCEtLSDpnaLpg6jova7lu5PpmLTlvbEgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDQyIFE0Miw0NSA0Niw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgPHBhdGggZD0iTTU0LDQyIFE1OCw0NSA2Miw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiBmaWx0ZXI9InVybCgjc2hhZG93X0l2YW4pIj5JPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 6, name: 'Emma', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPGRlZnM+CiAgICAgICAgICAgIDwhLS0g5riQ5Y+Y5a6a5LmJIC0tPgogICAgICAgICAgICA8cmFkaWFsR3JhZGllbnQgaWQ9ImZhY2VHcmFkaWVudF9FbW1hIiBjeD0iNTAlIiBjeT0iNDAlIiByPSI2MCUiPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Y1RTZEMztzdG9wLW9wYWNpdHk6MSIgLz4KICAgICAgICAgICAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0Q0QTU3NDtzdG9wLW9wYWNpdHk6MC44IiAvPgogICAgICAgICAgICA8L3JhZGlhbEdyYWRpZW50PgogICAgICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhhaXJHcmFkaWVudF9FbW1hIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CiAgICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMkQxQjBFO3N0b3Atb3BhY2l0eToxIiAvPgogICAgICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDAwMDAwO3N0b3Atb3BhY2l0eTowLjgiIC8+CiAgICAgICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgICAgIDwhLS0g6Zi05b2x5ruk6ZWcIC0tPgogICAgICAgICAgICA8ZmlsdGVyIGlkPSJzaGFkb3dfRW1tYSIgeD0iLTIwJSIgeT0iLTIwJSIgd2lkdGg9IjE0MCUiIGhlaWdodD0iMTQwJSI+CiAgICAgICAgICAgICAgICA8ZmVEcm9wU2hhZG93IGR4PSIyIiBkeT0iMiIgc3RkRGV2aWF0aW9uPSIzIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgICAgICAgPC9maWx0ZXI+CiAgICAgICAgPC9kZWZzPgogICAgICAgIAogICAgICAgIDwhLS0g6IOM5pmv5ZyGIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjRUM0ODk5Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlpLTlj5EgLS0+CiAgICAgICAgPHBhdGggZD0iTTMwLDIwIFEyNSwxMCAzNSw4IFE1MCw1IDY1LDggUTc1LDEwIDcwLDIwIFE3MCwxNSA2NSwxMiBRNTAsOCAzNSwxMiBRMzAsMTUgMzAsMjAiIGZpbGw9InVybCgjaGFpckdyYWRpZW50X0VtbWEpIiBmaWx0ZXI9InVybCgjc2hhZG93X0VtbWEpIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDohLjpg6jova7lu5MgLS0+CiAgICAgICAgPHBhdGggZD0iTTM1LDI1IFEzNSwyMCA0MCwxOCBRNTAsMTUgNjAsMTggUTY1LDIwIDY1LDI1IFE2NSwzNSA2MCw0NSBRNTAsNDggNDAsNDUgUTM1LDM1IDM1LDI1IiBmaWxsPSJ1cmwoI2ZhY2VHcmFkaWVudF9FbW1hKSIgZmlsdGVyPSJ1cmwoI3NoYWRvd19FbW1hKSIvPgogICAgICAgIAogICAgICAgIDwhLS0g55y8552bIC0tPgogICAgICAgIDxlbGxpcHNlIGN4PSI0MyIgY3k9IjMyIiByeD0iNCIgcnk9IjMiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjU3IiBjeT0iMzIiIHJ4PSI0IiByeT0iMyIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8IS0tIOees+WtlCAtLT4KICAgICAgICA8Y2lyY2xlIGN4PSI0MyIgY3k9IjMyIiByPSIyIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTciIGN5PSIzMiIgcj0iMiIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIDwhLS0g6auY5YWJIC0tPgogICAgICAgIDxjaXJjbGUgY3g9IjQ0IiBjeT0iMzEiIHI9IjAuOCIgZmlsbD0id2hpdGUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI1OCIgY3k9IjMxIiByPSIwLjgiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPCEtLSDnnLznnavmr5sgLS0+CiAgICAgICAgPHBhdGggZD0iTTM5LDMwIFE0MywyOSA0NywzMCIgc3Ryb2tlPSIjMUExQTFBIiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIvPgogICAgICAgIDxwYXRoIGQ9Ik01MywzMCBRNTcsMjkgNjEsMzAiIHN0cm9rZT0iIzFBMUExQSIgc3Ryb2tlLXdpZHRoPSIwLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecieavmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDAsMjggUTQzLDI2IDQ2LDI4IE01NCwyOCBRNTcsMjYgNjAsMjgiIHN0cm9rZT0iIzJEMUIwRSIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDpvLvlrZAgLS0+CiAgICAgICAgPHBhdGggZD0iTTUwLDM1IEw1MCw0MCBNNDksNDAgUTUwLDQxIDUxLDQwIiBzdHJva2U9IiNDNEE1NzQiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDpvLvnv7zpmLTlvbEgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjQ4IiBjeT0iMzkiIHJ4PSIxIiByeT0iMC41IiBmaWxsPSIjRDRBNTc0IiBvcGFjaXR5PSIwLjUiLz4KICAgICAgICA8ZWxsaXBzZSBjeD0iNTIiIGN5PSIzOSIgcng9IjEiIHJ5PSIwLjUiIGZpbGw9IiNENEE1NzQiIG9wYWNpdHk9IjAuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g5Zi05be0IC0tPgogICAgICAgIDxwYXRoIGQ9Ik00Niw0NCBRNTAsNDYgNTQsNDQiIHN0cm9rZT0iI0Q0NzU2QiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+CiAgICAgICAgPCEtLSDkuIvllIcgLS0+CiAgICAgICAgPHBhdGggZD0iTTQ3LDQ1IFE1MCw0Ni41IDUzLDQ1IiBzdHJva2U9IiNENDc1NkIiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC43Ii8+CiAgICAgICAgPCEtLSDohLjpoornuqLmmZUgLS0+CiAgICAgICAgPGVsbGlwc2UgY3g9IjM4IiBjeT0iMzgiIHJ4PSIzIiByeT0iMiIgZmlsbD0iI0Y0QTRBNCIgb3BhY2l0eT0iMC40Ii8+CiAgICAgICAgPGVsbGlwc2UgY3g9IjYyIiBjeT0iMzgiIHJ4PSIzIiByeT0iMiIgZmlsbD0iI0Y0QTRBNCIgb3BhY2l0eT0iMC40Ii8+CiAgICAgICAgPCEtLSDpnaLpg6jova7lu5PpmLTlvbEgLS0+CiAgICAgICAgPHBhdGggZD0iTTM4LDQyIFE0Miw0NSA0Niw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgPHBhdGggZD0iTTU0LDQyIFE1OCw0NSA2Miw0MiIgc3Ryb2tlPSIjQzRBNTc0IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC42Ii8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIiBmaWx0ZXI9InVybCgjc2hhZG93X0VtbWEpIj5FPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 7, name: 'Sophia', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPCEtLSDog4zmma/lnIYgLS0+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMwNkI2RDQiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWktOWPkSAtLT4KICAgICAgICA8cGF0aCBkPSJNMjUsMzUgUTMwLDE1IDUwLDE4IFE3MCwxNSA3NSwzNSBRNzUsMjUgNzAsMjAgUTUwLDEwIDMwLDIwIFEyNSwyNSAyNSwzNSIgZmlsbD0iIzFBMEUwQSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6IS46YOoIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MiwyNSBRNDUsMjIgNTAsMjUgUTU1LDIyIDU4LDI1IFE1NiwzNSA1MCwzNyBRNDQsMzUgNDIsMjUiIGZpbGw9IiNGNEQxQUUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecvOedmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDQsMjggUTQ3LDI2IDQ4LDI4IE01MiwyOCBRNTUsMjYgNTYsMjgiIHN0cm9rZT0iIzJDMTgxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjI4IiByPSIxIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQiIGN5PSIyOCIgcj0iMSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g55yJ5q+bIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MywyNiBRNDYsMjUgNDksMjUgTTUxLDI1IFE1NCwyNSA1NywyNiIgc3Ryb2tlPSIjMUEwRTBBIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6by75a2QIC0tPgogICAgICAgIDxwYXRoIGQ9Ik01MCwzMCBMNTAsMzIgTTQ5LDMyIFE1MCwzMyA1MSwzMiIgc3Ryb2tlPSIjRDRBNTc0IiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWYtOW3tCAtLT4KICAgICAgICA8cGF0aCBkPSJNNDcsMzYgUTUwLDM4IDUzLDM2IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIj5TPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 8, name: 'Michael', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPCEtLSDog4zmma/lnIYgLS0+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNFRjQ0NDQiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWktOWPkSAtLT4KICAgICAgICA8cGF0aCBkPSJNMjUsMzUgUTMwLDE1IDUwLDE4IFE3MCwxNSA3NSwzNSBRNzUsMjUgNzAsMjAgUTUwLDEwIDMwLDIwIFEyNSwyNSAyNSwzNSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g6IS46YOoIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MCwyNSBRNDUsMjAgNTAsMjUgUTU1LDIwIDYwLDI1IFE1OCwzNSA1MCwzOCBRNDIsMzUgNDAsMjUiIGZpbGw9IiNFOEI4OTYiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecvOedmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDQsMjggUTQ2LDI2IDQ4LDI4IE01MiwyOCBRNTQsMjYgNTYsMjgiIHN0cm9rZT0iIzJDMTgxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjI4IiByPSIxIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQiIGN5PSIyOCIgcj0iMSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g55yJ5q+bIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MywyNiBMNDksMjUgTTUxLDI1IEw1NywyNiIgc3Ryb2tlPSIjMkMxODEwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6by75a2QIC0tPgogICAgICAgIDxwYXRoIGQ9Ik01MCwzMCBMNTAsMzMgTTQ5LDMzIFE1MCwzNCA1MSwzMyIgc3Ryb2tlPSIjRDRBNTc0IiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWYtOW3tCAtLT4KICAgICAgICA8cGF0aCBkPSJNNDcsMzYgUTUwLDM4IDUzLDM2IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIj5NPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 9, name: 'Lisa', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPCEtLSDog4zmma/lnIYgLS0+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiMyMkM1NUUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWktOWPkSAtLT4KICAgICAgICA8cGF0aCBkPSJNMjUsMzUgUTMwLDE1IDUwLDE4IFE3MCwxNSA3NSwzNSBRNzUsMjUgNzAsMjAgUTUwLDEwIDMwLDIwIFEyNSwyNSAyNSwzNSIgZmlsbD0iIzFBMEUwQSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6IS46YOoIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MiwyNSBRNDUsMjIgNTAsMjUgUTU1LDIyIDU4LDI1IFE1NiwzNSA1MCwzNyBRNDQsMzUgNDIsMjUiIGZpbGw9IiNGNEQxQUUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecvOedmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDQsMjggUTQ3LDI2IDQ4LDI4IE01MiwyOCBRNTUsMjYgNTYsMjgiIHN0cm9rZT0iIzJDMTgxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjI4IiByPSIxIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQiIGN5PSIyOCIgcj0iMSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g55yJ5q+bIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MywyNiBRNDYsMjUgNDksMjUgTTUxLDI1IFE1NCwyNSA1NywyNiIgc3Ryb2tlPSIjMUEwRTBBIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6by75a2QIC0tPgogICAgICAgIDxwYXRoIGQ9Ik01MCwzMCBMNTAsMzIgTTQ5LDMyIFE1MCwzMyA1MSwzMiIgc3Ryb2tlPSIjRDRBNTc0IiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWYtOW3tCAtLT4KICAgICAgICA8cGF0aCBkPSJNNDcsMzYgUTUwLDM4IDUzLDM2IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIj5MPC90ZXh0PgogICAgPC9zdmc+' },
+                { id: 10, name: 'David', avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICAgICAgPCEtLSDog4zmma/lnIYgLS0+CiAgICAgICAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNTAiIGZpbGw9IiNGOTczMTYiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWktOWPkSAtLT4KICAgICAgICA8cGF0aCBkPSJNMjUsMzUgUTMwLDE1IDUwLDE4IFE3MCwxNSA3NSwzNSBRNzUsMjUgNzAsMjAgUTUwLDEwIDMwLDIwIFEyNSwyNSAyNSwzNSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g6IS46YOoIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MCwyNSBRNDUsMjAgNTAsMjUgUTU1LDIwIDYwLDI1IFE1OCwzNSA1MCwzOCBRNDIsMzUgNDAsMjUiIGZpbGw9IiNFOEI4OTYiLz4KICAgICAgICAKICAgICAgICA8IS0tIOecvOedmyAtLT4KICAgICAgICA8cGF0aCBkPSJNNDQsMjggUTQ2LDI2IDQ4LDI4IE01MiwyOCBRNTQsMjYgNTYsMjgiIHN0cm9rZT0iIzJDMTgxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjI4IiByPSIxIiBmaWxsPSIjMkMxODEwIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQiIGN5PSIyOCIgcj0iMSIgZmlsbD0iIzJDMTgxMCIvPgogICAgICAgIAogICAgICAgIDwhLS0g55yJ5q+bIC0tPgogICAgICAgIDxwYXRoIGQ9Ik00MywyNiBMNDksMjUgTTUxLDI1IEw1NywyNiIgc3Ryb2tlPSIjMkMxODEwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogICAgICAgIAogICAgICAgIDwhLS0g6by75a2QIC0tPgogICAgICAgIDxwYXRoIGQ9Ik01MCwzMCBMNTAsMzMgTTQ5LDMzIFE1MCwzNCA1MSwzMyIgc3Ryb2tlPSIjRDRBNTc0IiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiLz4KICAgICAgICAKICAgICAgICA8IS0tIOWYtOW3tCAtLT4KICAgICAgICA8cGF0aCBkPSJNNDcsMzYgUTUwLDM4IDUzLDM2IiBzdHJva2U9IiNDNDc1NkIiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSJub25lIi8+CiAgICAgICAgCiAgICAgICAgPCEtLSDlrZfmr43moIfor4YgLS0+CiAgICAgICAgPHRleHQgeD0iNTAiIHk9Ijc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjRkZGRkZGIj5EPC90ZXh0PgogICAgPC9zdmc+' }
+            ];
+            
+            const track = document.getElementById('membersCarouselTrack');
+            if (!track) {
+                console.error('找不到会员轮播容器元素');
+                return;
+            }
+            
+            // 清空现有内容
+            track.innerHTML = '';
+            
+            // 创建两组相同的会员数据以实现无缝循环
+            const duplicatedMembers = [...membersData, ...membersData];
+            
+            // 生成会员头像HTML
+            duplicatedMembers.forEach(member => {
+                const memberElement = document.createElement('a');
+                memberElement.className = 'member-item';
+                memberElement.href = `member.html?id=${member.id}`;
+                memberElement.onclick = function(e) {
+                    e.preventDefault();
+                    handleMemberClick(member);
+                };
+                
+                memberElement.innerHTML = `
+                    <img src="${member.avatar}" alt="${member.name}" class="member-avatar" style="background: transparent !important; background-color: transparent !important;">
+                    <span class="member-name">${member.name}</span>
+                `;
+                
+                track.appendChild(memberElement);
+            });
+        }
+        
+        // 处理会员点击事件
+        function handleMemberClick(member) {
+            console.log('点击会员:', member);
+            // 这里可以跳转到会员主页或显示会员详情
+            // 暂时显示提示信息
+            alert(`即将跳转到 ${member.name} 的主页`);
+            
+            // 实际项目中可以这样跳转:
+            // window.location.href = `member.html?id=${member.id}`;
+        }
+        
+        // 导航到首页
+        function navigateToHome() {
+            window.location.href = 'welcome.html';
+        }
+        
+        // 导航到入口页面
+        function navigateToIndex() {
+            window.location.href = 'home-main-page.html';
+        }
+        
+        // 加载统一导航栏
+        function loadUnifiedNavbar() {
+            fetch('components/top-navbar.html')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('unified-navbar-container').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Failed to load unified navbar:', error);
+                });
+        }
+        
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUnifiedNavbar(); // 加载统一导航栏
+            loadSavedBackground();
+            loadSavedCarouselTexts();
+            loadSavedCarouselImages();
+            initWeChatCompatibility();
+            initJoinButton();
+            initMembersCarousel(); // 初始化会员头像轮播
+            updateUIBasedOnLoginStatus(); // 初始化欢迎页面显示状态
+        });
+    </script>
+</body>
+</html>

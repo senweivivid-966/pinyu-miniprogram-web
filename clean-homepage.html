@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动 - PINYU CLUB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%);
+            color: #1f2937;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* 主题色彩变量 */
+        :root {
+            --primary-color: #FF6B9D;
+            --secondary-color: #EC4899;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 模拟小程序顶部导航栏样式 - 精确复刻截图1 */
+        .miniprogram-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .navbar-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: auto;
+            margin-right: 12px;
+            padding: 2px 4px;
+            line-height: 1;
+            height: 40px;
+            margin-top: 12px;
+        }
+
+        .navbar-brand-unified {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333333;
+            line-height: 1.2;
+            letter-spacing: 0;
+            margin: 0;
+            padding: 0;
+            display: block;
+            margin-top: 0px;
+        }
+
+        .navbar-center {
+            display: flex;
+            gap: 16px;
+            flex: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item-multiline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
+            justify-content: space-between;
+            height: 40px;
+        }
+
+        .nav-line {
+            display: block;
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+        }
+
+        .nav-line:first-child {
+            align-self: flex-start;
+            margin-bottom: 0;
+        }
+        
+        .nav-line:last-child {
+            align-self: flex-start;
+            margin-bottom: 0;
+        }
+
+        /* 移动端触摸反馈支持 - 顶部导航 */
+        .nav-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .nav-item:active,
+        .nav-item:focus,
+        .nav-item.active-touch {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        .nav-item:active .nav-line,
+        .nav-item:focus .nav-line,
+        .nav-item.active-touch .nav-line {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-item:hover {
+            color: #666;
+        }
+
+        .nav-item.active {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            min-width: auto;
+            justify-content: flex-end;
+            margin-left: 10px;
+            margin-right: 15px;
+        }
+
+        .message-badge {
+            position: absolute;
+            top: -5px;
+            right: -15px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+            z-index: 10;
+        }
+
+        /* 底部导航栏样式 */
+        .miniprogram-tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 30px 18px 30px;
+            z-index: 1000;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 4px 0px;
+            text-decoration: none;
+            color: #8e8e93;
+            margin: 0 8px;
+            max-width: 60px;
+        }
+
+        .tab-item.active {
+            color: #1a1a1a;
+        }
+
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+            transition: all 0.2s ease;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333333;
+        }
+
+        .tab-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: #333333;
+        }
+
+        .tab-text {
+            font-size: 15px;
+            color: #333333;
+            font-weight: 500;
+            line-height: 1.2;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item:first-child .tab-text {
+            font-weight: 400;
+        }
+
+        .tab-item.active .tab-icon {
+            color: #333333;
+        }
+
+        .tab-item.active .tab-text {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .tab-item:hover .tab-icon,
+        .tab-item:hover .tab-text {
+            color: #666;
+        }
+
+        /* 添加点击效果样式 */
+        .tab-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .tab-item:active,
+        .tab-item:focus,
+        .tab-item.active-touch {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        .tab-item:active .tab-text,
+        .tab-item:focus .tab-text,
+        .tab-item.active-touch .tab-text {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tab-item:active .tab-icon,
+        .tab-item:focus .tab-icon,
+        .tab-item.active-touch .tab-icon {
+            color: #6e15ff;
+        }
+
+        /* 发布图标特殊样式 */
+        .publish-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .publish-badge {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            flex-shrink: 0;
+            aspect-ratio: 1;
+        }
+
+        .publish-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 20px 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+            text-align: center;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar-center {
+                gap: 16px;
+            }
+
+            .nav-item {
+                font-size: 16px;
+            }
+
+            .content-card {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+
+            .content-title {
+                font-size: 24px;
+            }
+
+            .content-icon {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-center {
+                gap: 16px;
+            }
+
+            .nav-item {
+                font-size: 16px;
+            }
+
+            .miniprogram-tabbar {
+                padding: 8px 20px 18px 20px;
+            }
+
+            .tab-item {
+                margin: 0 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="miniprogram-navbar">
+        <div class="navbar-left">
+            <div class="navbar-brand-unified">PINYU<br>CLUB</div>
+        </div>
+        <div class="navbar-center">
+            <a href="clean-homepage.html" class="nav-item nav-item-multiline active" onclick="handleNavClick('home')">
+                <span class="nav-line">首</span>
+                <span class="nav-line">页</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('my')">
+                <span class="nav-line">我的</span>
+                <span class="nav-line">主页</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('match')">
+                <span class="nav-line">同频</span>
+                <span class="nav-line">相遇</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('test')">
+                <span class="nav-line">测</span>
+                <span class="nav-line">测</span>
+            </a>
+            <a href="activity-page.html" class="nav-item nav-item-multiline" onclick="handleNavClick('activity')">
+                <span class="nav-line">活</span>
+                <span class="nav-line">动</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('community')">
+                <span class="nav-line">社</span>
+                <span class="nav-line">区</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('member')">
+                <span class="nav-line">会员</span>
+                <span class="nav-line">中心</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleMessageClick()" style="position: relative;">
+                <span class="nav-line">消</span>
+                <span class="nav-line">息</span>
+                <span class="message-badge">126</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 内容已移除，保持纯净背景 -->
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="miniprogram-tabbar">
+        <div class="tab-item active" onclick="handleTabClick('home')">
+            <div class="tab-icon">
+                <!-- 简洁的五角星图标（带笑脸） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 五角星外框 -->
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <!-- 笑脸眼睛 -->
+                    <circle cx="10" cy="10.5" r="0.8" fill="currentColor"/>
+                    <circle cx="14" cy="10.5" r="0.8" fill="currentColor"/>
+                    <!-- 笑脸嘴巴 -->
+                    <path d="M10 13.5C10 13.5 11 14.5 12 14.5C13 14.5 14 13.5 14 13.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <span>首页</span>
+        </div>
+
+        <div class="tab-item" onclick="handleTabClick('match')">
+            <div class="tab-icon">
+                <!-- 简洁的双人图标 -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 左边的人 -->
+                    <circle cx="9" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M3 21C3 17.134 5.686 14 9 14C12.314 14 15 17.134 15 21" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <!-- 右边的人 -->
+                    <circle cx="15" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M9 21C9 17.134 11.686 14 15 14C18.314 14 21 17.134 21 21" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">相遇</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('publish')">
+            <div class="tab-icon publish-icon">
+                <!-- 圆形底框徽标 -->
+                <div class="publish-badge">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="white"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="tab-text">发布</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('message')">
+            <div class="tab-icon">
+                <!-- 截图3：聊天气泡图标（边框样式） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="8" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="12" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="16" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">消息</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('profile')">
+            <div class="tab-icon">
+                <!-- 截图4：用户头像图标（边框样式） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+
+    <script>
+        // 底部导航处理函数
+        function handleTabClick(tab) {
+            // 移除所有tab的active类
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.remove('active-touch');
+            });
+            
+            // 为当前点击的tab添加active类
+            const clickedTab = event.target.closest('.tab-item');
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+                
+                // 添加触摸反馈效果
+                clickedTab.classList.add('active-touch');
+                setTimeout(() => {
+                    clickedTab.classList.remove('active-touch');
+                }, 150);
+            }
+            
+            const routes = {
+                'home': 'clean-homepage.html',
+                'activity': 'activity-page.html',
+                'discover': 'social-discovery-page.html',
+                'message': 'messages.html',
+                'profile': 'profile.html'
+            };
+            
+            if (routes[tab]) {
+                window.location.href = routes[tab];
+            } else {
+                alert(`${tab}功能正在开发中，敬请期待！`);
+            }
+        }
+
+        // 顶部导航处理函数
+        function handleNavClick(navType) {
+            // 移除所有导航项的active类
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.remove('active-touch');
+            });
+            
+            // 为当前点击的导航项添加active类
+            const clickedItem = event.target.closest('.nav-item');
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+                
+                // 添加触摸反馈效果
+                clickedItem.classList.add('active-touch');
+                setTimeout(() => {
+                    clickedItem.classList.remove('active-touch');
+                }, 150);
+            }
+            
+            const routes = {
+                'home': 'social-discovery-page.html',
+                'activity': 'activity-page.html',
+                'my': 'profile.html',
+                'match': 'frequency-match.html',
+                'test': 'clean-homepage.html',
+                'community': 'clean-homepage.html',
+                'member': 'clean-homepage.html',
+                'messages': 'messages.html'
+            };
+            
+            if (routes[navType]) {
+                window.location.href = routes[navType];
+            } else {
+                alert(`${navType}功能正在开发中，敬请期待！`);
+            }
+        }
+
+        // 消息处理函数
+        function handleMessages() {
+            alert('消息功能正在开发中，敬请期待！');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<view class="bottom-navbar">
+  <view class="navbar-container">
+    <view 
+      wx:for="{{navItems}}" 
+      wx:key="key"
+      class="nav-item {{current === item.key ? 'nav-item--active' : ''}}"
+      data-key="{{item.key}}"
+      data-url="{{item.url}}"
+      bindtap="onNavTap"
+    >
+      <view class="nav-icon">
+        <!-- 相遇图标 -->
+        <view wx:if="{{item.icon === 'heart'}}" class="icon-svg">
+          <view class="heart-icon {{current === item.key ? 'active' : ''}}"></view>
+        </view>
+        
+        <!-- 私信图标 -->
+        <view wx:elif="{{item.icon === 'message'}}" class="icon-svg">
+          <view class="message-icon {{current === item.key ? 'active' : ''}}"></view>
+        </view>
+        
+        <!-- 发布图标 -->
+        <view wx:elif="{{item.icon === 'plus'}}" class="icon-svg">
+          <view class="plus-icon {{current === item.key ? 'active' : ''}}"></view>
+        </view>
+        
+        <!-- 我的图标 -->
+        <view wx:elif="{{item.icon === 'user'}}" class="icon-svg">
+          <view class="user-icon {{current === item.key ? 'active' : ''}}"></view>
+        </view>
+        
+        <!-- 首页图标 -->
+        <view wx:elif="{{item.icon === 'home'}}" class="icon-svg">
+          <view class="home-icon {{current === item.key ? 'active' : ''}}"></view>
+        </view>
+      </view>
+      
+      <text class="nav-label {{current === item.key ? 'nav-label--active' : ''}}">
+        {{item.label}}
+      </text>
+    </view>
+  </view>
+</view>

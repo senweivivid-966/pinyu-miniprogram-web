@@ -1,0 +1,37 @@
+<!--components/search-input/index.wxml-->
+<view class="search-input {{variant === 'hero' ? 'search-input--hero' : ''}} {{size === 'sm' ? 'search-input--sm' : ''}}">
+  <!-- 搜索图标 -->
+  <view class="search-input__icon">
+    <image src="/assets/icons/search.png" class="search-input__icon-img" mode="aspectFit" />
+  </view>
+  
+  <!-- 输入框 -->
+  <input 
+    class="search-input__field" 
+    placeholder="{{placeholder}}" 
+    value="{{inputValue}}"
+    bindinput="onInput"
+    bindfocus="onFocus"
+    bindblur="onBlur"
+    bindconfirm="onConfirm"
+    placeholder-class="search-input__placeholder"
+  />
+  
+  <!-- 清空按钮 -->
+  <view 
+    wx:if="{{inputValue}}" 
+    class="search-input__clear" 
+    bindtap="onClear"
+  >
+    清除
+  </view>
+  
+  <!-- 筛选按钮 -->
+  <view 
+    wx:if="{{showFilter}}" 
+    class="search-input__filter" 
+    bindtap="onFilter"
+  >
+    <image src="/assets/icons/filter.png" class="search-input__filter-img" mode="aspectFit" />
+  </view>
+</view>

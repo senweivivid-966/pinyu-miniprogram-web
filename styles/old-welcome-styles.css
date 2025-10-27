@@ -1,0 +1,159 @@
+/* 
+ * 旧版欢迎页面样式代码 - 独立区隔
+ * 文件创建时间: 2024年
+ * 用途: 将旧版欢迎页面的样式代码独立出来，方便后续移除
+ * 
+ * 涉及文件:
+ * - home-main-page.html (中间跳转页面)
+ * - welcome.html (最终欢迎页面)
+ * 
+ * 调用路径: 首页 → home-main-page.html → welcome.html
+ */
+
+/* ========== home-main-page.html 中的旧版样式 ========== */
+.old-welcome-home-main {
+    /* 基础重置样式 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.old-welcome-home-main body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    /* 紫色渐变背景 - 旧版特征 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.old-welcome-home-main .container {
+    text-align: center;
+    max-width: 400px;
+    padding: 40px 20px;
+}
+
+.old-welcome-home-main .brand-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.old-welcome-home-main .brand-subtitle {
+    font-size: 18px;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.old-welcome-home-main .welcome-text {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.old-welcome-home-main .description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    line-height: 1.5;
+}
+
+.old-welcome-home-main .note {
+    font-size: 14px;
+    margin-bottom: 10px;
+    opacity: 0.7;
+}
+
+.old-welcome-home-main .disclaimer {
+    font-size: 12px;
+    margin-bottom: 30px;
+    opacity: 0.6;
+}
+
+.old-welcome-home-main .experience-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.old-welcome-home-main .experience-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.old-welcome-home-main .page-content {
+    padding-top: 76px;
+    padding-bottom: 80px;
+}
+
+/* ========== welcome.html 中的旧版样式 ========== */
+.old-welcome-final {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.old-welcome-final body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    /* 粉色渐变背景 - 旧版特征 */
+    background: linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+}
+
+.old-welcome-final .container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 8px 12px;
+    min-height: 100vh;
+}
+
+/* 移动端优化 */
+@media (min-width: 768px) {
+    .old-welcome-final .container {
+        max-width: 414px;
+        margin: 0 auto;
+    }
+}
+
+.old-welcome-final .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid #e0e0e0;
+    backdrop-filter: blur(10px);
+}
+
+/* ========== 旧版欢迎页面的JavaScript函数 ========== */
+/*
+function navigateToWelcome() {
+    window.location.href = 'welcome.html';
+}
+*/
+
+/* ========== 识别标记 ========== */
+/* 
+ * 旧版欢迎页面的特征标识:
+ * 1. 包含 "PINYU CLUB" 和 "频遇俱乐部" 文字
+ * 2. 包含 "欢迎来到频遇俱乐部" 文字
+ * 3. 包含 "立即体验" 按钮
+ * 4. 使用紫色渐变背景 (linear-gradient(135deg, #667eea 0%, #764ba2 100%))
+ * 5. 使用粉色渐变背景 (linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%))
+ * 6. 调用路径: handleNavClick('home') → home-main-page.html → welcome.html
+ */

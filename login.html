@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 频遇小程序预览</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="login.css">
+    <script src="js/auth.js"></script>
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* 容器样式 */
+        .page-container {
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        /* 响应式设计 */
+        @media screen and (max-width: 414px) {
+            .page-container {
+                max-width: 100%;
+                box-shadow: none;
+            }
+        }
+
+        /* 测试账号信息样式 */
+        .test-accounts-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 20px 30px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-accounts-title {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .test-accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .test-account-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .test-account-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .account-label {
+            font-weight: 500;
+            color: #555;
+            min-width: 70px;
+            font-size: 14px;
+        }
+
+        .account-value {
+            flex: 1;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            color: #667eea;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin: 0 10px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .quick-fill-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .quick-fill-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .quick-fill-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 输入框填入动画 */
+        .form-input {
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 登录页面内容 -->
+        <div class="login-container">
+            <!-- Logo区域 -->
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-text">PINYU CLUB</div>
+                </div>
+                <div class="slogan">频遇俱乐部</div>
+            </div>
+
+            <!-- 测试账号信息 -->
+            <div class="test-accounts-info" style="display: none;">
+                <div class="test-accounts-title">
+                    <span class="info-icon">ℹ️</span>
+                    测试账号信息
+                </div>
+                <div class="test-accounts-list">
+                    <div class="test-account-item">
+                        <span class="account-label">测试用户:</span>
+                        <span class="account-value">testuser / Test123!</span>
+                        <button class="quick-fill-btn" onclick="quickFill('testuser', 'Test123!')">快速填入</button>
+                    </div>
+                    <div class="test-account-item">
+                        <span class="account-label">管理员:</span>
+                        <span class="account-value">admin / Admin123!</span>
+                        <button class="quick-fill-btn" onclick="quickFill('admin', 'Admin123!')">快速填入</button>
+                    </div>
+                    <div class="test-account-item">
+                        <span class="account-label">普通用户:</span>
+                        <span class="account-value">user1 / User123!</span>
+                        <button class="quick-fill-btn" onclick="quickFill('user1', 'User123!')">快速填入</button>
+                    </div>
+                    <div class="test-account-item">
+                        <span class="account-label">手机号:</span>
+                        <span class="account-value">13800138000 / 123456</span>
+                        <button class="quick-fill-btn" onclick="quickFill('13800138000', '123456')">快速填入</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 登录表单 -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" class="form-input" placeholder="请输入手机号/邮箱" required>
+                        <span class="input-icon">👤</span>
+                    </div>
+                    <div class="error-message" id="username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" class="form-input" placeholder="请输入密码" required>
+                        <span class="input-icon">🔒</span>
+                        <span class="toggle-password" id="togglePassword">👁️</span>
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span class="checkmark"></span>
+                        记住我
+                    </label>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <span class="btn-text">登录</span>
+                    <span class="btn-loading" style="display: none;">登录中...</span>
+                </button>
+
+                <div class="divider">
+                    <span>或</span>
+                </div>
+
+                <!-- 第三方登录 -->
+                <div class="social-login">
+                    <button type="button" class="social-btn wechat" onclick="wechatLogin()">
+                        <span class="social-icon">💬</span>
+                        微信登录
+                    </button>
+                </div>
+
+                <!-- 注册链接 -->
+                <div class="register-link">
+                    还没有账号？<a href="register.html">立即注册</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 快速填入测试账号
+        function quickFill(username, password) {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            if (usernameInput) usernameInput.value = username;
+            if (passwordInput) passwordInput.value = password;
+            
+            // 添加填入动画效果
+            usernameInput.style.backgroundColor = '#e8f5e8';
+            passwordInput.style.backgroundColor = '#e8f5e8';
+            
+            setTimeout(() => {
+                usernameInput.style.backgroundColor = '';
+                passwordInput.style.backgroundColor = '';
+            }, 1000);
+        }
+
+        // 微信登录
+        function wechatLogin() {
+            if (window.authManager) {
+                window.authManager.wechatLogin();
+            } else {
+                alert('微信登录功能开发中...');
+            }
+        }
+
+        // 页面加载后检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('登录页面加载完成');
+            
+            // 等待authManager初始化
+            setTimeout(() => {
+                if (window.authManager && window.authManager.isLoggedIn) {
+                    console.log('用户已登录，立即跳转到个人主页');
+                    window.location.href = 'home-main-page.html';
+                } else {
+                    console.log('用户未登录，120秒后将自动跳转到个人主页');
+                    console.log('开始设置120秒定时器...');
+                    
+                    // 120秒后自动跳转到个人主页
+                    const timer = setTimeout(() => {
+                        console.log('120秒时间到，开始跳转到个人主页');
+                        window.location.href = 'home-main-page.html';
+                    }, 120000); // 120秒 = 120000毫秒
+                    
+                    console.log('定时器已设置，ID:', timer);
+                    
+                    // 添加倒计时显示
+                    let countdown = 120;
+                    const countdownInterval = setInterval(() => {
+                        countdown--;
+                        console.log(`剩余时间: ${countdown}秒后跳转到个人主页`);
+                        if (countdown <= 0) {
+                            clearInterval(countdownInterval);
+                        }
+                    }, 1000);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+/* 小程序基础样式 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 小程序组件基础样式 */
+.scroll-view {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swiper {
+  position: relative;
+  overflow: hidden;
+}
+
+.swiper-item {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background-color: #07c160;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+.btn-default {
+  background-color: #f7f7f7;
+  color: #333;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+.btn-warn {
+  background-color: #fa5151;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+}
+
+/* 表单组件样式 */
+.picker, .slider, .switch, .radio, .checkbox {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 自定义组件样式 */
+.custom-component {
+  display: block;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+  body {
+  font-size: 14px;
+}
+
+}
+
+@media screen and (min-width: 769px) {
+  body {
+  font-size: 16px;
+}
+
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+  opacity: 0;
+}
+
+to {
+  opacity: 1;
+}
+
+}
+
+@keyframes slideIn {
+  from {
+  transform: translateX(-100%);
+}
+
+to {
+  transform: translateX(0);
+}
+
+}
+
+/* 工具类 */
+.wx-flex {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.wx-flex-column {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+.wx-flex-row {
+  -webkit-flex-direction: row;
+  flex-direction: row;
+}
+
+.wx-justify-center {
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.wx-align-center {
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.wx-flex-1 {
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.wx-text-center {
+  text-align: center;
+}
+
+.wx-text-left {
+  text-align: left;
+}
+
+.wx-text-right {
+  text-align: right;
+}
+
+.wx-hidden {
+  display: none !important;
+}
+
+.wx-visible {
+  display: block !important;
+}
+
+.hero-banner {
+  position: relative;
+  width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  span-align: center;
+  color: white;
+}
+
+.hero-title {
+  font-size: 6.4000vw;
+  font-weight: bold;
+  margin-bottom: 2.1333vw;
+  span-shadow: 0 0.2667vw 1.0667vw rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 3.7333vw;
+  opacity: 0.9;
+  span-shadow: 0 0.2667vw 0.5333vw rgba(0, 0, 0, 0.3);
+}

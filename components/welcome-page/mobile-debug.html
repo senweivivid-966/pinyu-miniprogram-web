@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>频遇俱乐部 - 手机调试版</title>
+    <link rel="stylesheet" href="welcome-page.css?v=1761088953&nocache=true&mobile=debug">
+    <style>
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            z-index: 9999;
+        }
+        .refresh-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        调试版本<br>
+        时间戳: 1761088953<br>
+        字体: 63px<br>
+        按钮: 12px×36px
+    </div>
+    
+    <div class="container">
+        <div class="brand-title">PINYU CLUB</div>
+        <div class="brand-subtitle">频遇俱乐部</div>
+        
+        <div class="welcome-text">欢迎来到频遇俱乐部</div>
+        <div class="description">发现志同道合的朋友，开启精彩社交生活。</div>
+        <div class="note">这是小程序的浏览器预览版本。</div>
+        <div class="disclaimer">注：实际功能请在微信小程序中体验</div>
+        
+        <button class="experience-btn">立即体验</button>
+    </div>
+    
+    <button class="refresh-btn" onclick="location.reload(true)">强制刷新</button>
+    
+    <script>
+        // 强制刷新CSS
+        setTimeout(() => {
+            const link = document.querySelector('link[rel="stylesheet"]');
+            const newLink = link.cloneNode();
+            newLink.href = link.href + '&t=' + Date.now();
+            link.parentNode.replaceChild(newLink, link);
+        }, 1000);
+        
+        // 显示加载信息
+        console.log('页面加载时间:', new Date().toLocaleString());
+        console.log('CSS链接:', document.querySelector('link[rel="stylesheet"]').href);
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "name": "pinyu-miniprogram-native",
+  "version": "1.0.0",
+  "description": "品遇小程序原生开发版本",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node sync-dev.js",
+    "sync": "node sync-dev.js",
+    "sync:home": "node sync-dev.js home",
+    "sync:profile": "node sync-dev.js profile",
+    "sync:messages": "node sync-dev.js messages",
+    "sync:frequency": "node sync-dev.js frequency-match",
+    "watch": "node watch-sync.js",
+    "resource-map": "node resource-mapping.js",
+    "preview": "python3 server.py 8081",
+    "build": "echo 'Build process not implemented yet'",
+    "test": "echo 'Test process not implemented yet'",
+    "lint": "eslint *.js --no-eslintrc --env node --env es6 --parser-options ecmaVersion:2020 --rule 'no-unused-vars:error' --rule 'no-undef:error' --rule 'semi:error' --rule 'quotes:[error,single]' --rule 'indent:[error,2]' --rule 'no-trailing-spaces:error' --rule 'space-before-function-paren:[error,always]' --rule 'no-extra-semi:error' --rule 'padded-blocks:[error,never]' --rule 'no-new:error' --rule 'eol-last:error'",
+    "lint:fix": "eslint *.js --fix --no-eslintrc --env node --env es6 --parser-options ecmaVersion:2020 --rule 'no-unused-vars:error' --rule 'no-undef:error' --rule 'semi:error' --rule 'quotes:[error,single]' --rule 'indent:[error,2]' --rule 'no-trailing-spaces:error' --rule 'space-before-function-paren:[error,always]' --rule 'no-extra-semi:error' --rule 'padded-blocks:[error,never]' --rule 'no-new:error' --rule 'eol-last:error'"
+  },
+  "keywords": [
+    "miniprogram",
+    "wechat",
+    "social",
+    "dating"
+  ],
+  "author": "品遇团队",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinyu/miniprogram-native.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pinyu/miniprogram-native/issues"
+  },
+  "homepage": "https://github.com/pinyu/miniprogram-native#readme"
+}

@@ -1,0 +1,27 @@
+/**
+ * 底部导航栏样式 - 无特效版本
+ * 移除所有发散光和阴影效果
+ */
+
+/* 底部导航项激活状态 - 普通黑色 */
+.bottom-nav-item.active {
+    color: #333333;
+}
+
+.bottom-nav-item.active .bottom-nav-icon {
+    color: #333333;
+}
+
+.bottom-nav-item.active .nav-icon-img {
+    filter: none;
+}
+
+.bottom-nav-item.active .bottom-nav-text {
+    color: #333333;
+    font-weight: 600;
+}
+
+/* 悬停状态 - 移除特效 */
+.bottom-nav-item:hover {
+    color: #333333;
+}

@@ -1,0 +1,98 @@
+<!--pages/home/index.wxml-->
+<view class="container">
+  
+  <!-- 顶部栏 -->
+  <view class="header">
+    <!-- PINYU CLUB 标题 -->
+    <view class="header-left">
+      <text class="brand-title">PINYU</text>
+      <text class="brand-subtitle">CLUB</text>
+    </view>
+    
+    <!-- 导航菜单 -->
+    <view class="header-nav">
+      <text class="nav-item {{currentNav === 'home' ? 'nav-active' : ''}}" data-nav="home" bindtap="onNavTap">首页</text>
+      <text class="nav-item {{currentNav === 'my' ? 'nav-active' : ''}}" data-nav="my" bindtap="onNavTap">我的主页</text>
+      <text class="nav-item {{currentNav === 'match' ? 'nav-active' : ''}}" data-nav="match" bindtap="onNavTap">同频相遇</text>
+      <text class="nav-item {{currentNav === 'test' ? 'nav-active' : ''}}" data-nav="test" bindtap="onNavTap">测测</text>
+      <text class="nav-item {{currentNav === 'activity' ? 'nav-active' : ''}}" data-nav="activity" bindtap="onNavTap">活动</text>
+      <text class="nav-item {{currentNav === 'community' ? 'nav-active' : ''}}" data-nav="community" bindtap="onNavTap">社区</text>
+      <text class="nav-item {{currentNav === 'member' ? 'nav-active' : ''}}" data-nav="member" bindtap="onNavTap">会员中心</text>
+    </view>
+    
+    <!-- 消息图标 -->
+    <view class="header-right">
+      <view class="message-icon" bindtap="onMessageTap">
+        <text class="icon-text">消息</text>
+        <view wx:if="{{messageCount > 0}}" class="message-badge">{{messageCount > 99 ? '99+' : messageCount}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 页面内容区域 -->
+  <view class="content">
+    <text class="welcome-text">欢迎来到 PINYU CLUB</text>
+  </view>
+
+  <!-- 快速操作 -->
+  <quick-actions />
+
+  <!-- 信息条 -->
+  <view class="info-banner">
+    <view class="info-content">
+      <view class="info-title">线下同城聚会</view>
+      <view class="info-subtitle">周末见</view>
+    </view>
+    <view class="info-actions">
+      <view class="chip chip-info">推荐</view>
+      <button class="btn-secondary btn-sm" bindtap="onActivitiesTap">了解更多</button>
+    </view>
+  </view>
+
+  <!-- 推荐活动 -->
+  <view class="events-section">
+    <view class="section-header">
+      <view class="section-title">推荐活动</view>
+      <view class="section-more" bindtap="onActivitiesTap">查看全部</view>
+    </view>
+    <view class="events-list">
+      <event-card 
+        wx:for="{{events}}" 
+        wx:key="id"
+        event-id="{{item.id}}"
+        title="{{item.title}}"
+        meta="{{item.meta}}"
+        cover-url="{{item.coverUrl}}"
+        place="{{item.place}}"
+        city="{{item.city}}"
+        capacity="{{item.capacity}}"
+        registered="{{item.registered}}"
+        registered-by-me="{{item.registeredByMe}}"
+        waitlisted-by-me="{{item.waitlistedByMe}}"
+        waitlist-position="{{item.waitlistPosition}}"
+        highlight-query="{{query}}"
+        bind:register="onEventRegister"
+        bind:cancel-register="onEventCancelRegister"
+        bind:join-waitlist="onEventJoinWaitlist"
+        bind:cancel-waitlist="onEventCancelWaitlist"
+      />
+    </view>
+  </view>
+
+  <!-- 登录弹窗 -->
+  <view wx:if="{{showLoginModal}}" class="modal-overlay" bindtap="hideLoginModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <view class="modal-title">欢迎加入 PINYU CLUB</view>
+        <view class="modal-close" bindtap="hideLoginModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="modal-text">请先完成微信登录</view>
+        <button class="btn btn-primary" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">
+          微信登录
+        </button>
+      </view>
+    </view>
+  </view>
+
+</view>

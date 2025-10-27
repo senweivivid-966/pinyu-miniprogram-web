@@ -1,0 +1,65 @@
+{
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中",
+  "projectname": "pinyu-club-miniprogram",
+  "setting": {
+    "compileHotReLoad": true,
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true,
+    "autoAudits": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": false,
+    "uploadWithSourceMap": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "useIsolateContext": true,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "showShadowRootInWxmlPanel": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": false,
+    "disableUseStrict": false,
+    "minifyWXML": false,
+    "showES6CompileOption": false,
+    "useCompilerPlugins": false,
+    "ignoreUploadUnusedFiles": true,
+    "coverView": true,
+    "nodeModules": false,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "lazyloadPlaceholderEnable": false,
+    "preloadBackgroundData": false,
+    "enableEngineNative": false,
+    "userConfirmedBundleSwitch": false,
+    "skylineRenderEnable": true,
+    "useStaticServer": false,
+    "useLanDebug": false,
+    "ignoreDevUnusedFiles": true,
+    "bigPackageSizeSupport": true
+  },
+  "libVersion": "3.10.1",
+  "appid": "wxba8b023c84f372f5",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/home/index",
+          "pathName": "pages/home/index",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
+    }
+  }
+}

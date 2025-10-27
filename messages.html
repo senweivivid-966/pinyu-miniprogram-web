@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>messages - 品遇小程序预览</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="messages.css">
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+        }
+        
+        /* 容器样式 */
+        .page-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* 调试信息 */
+        .debug-info {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+    </style>
+<style>
+  /* 接入统一通栏后隐藏旧顶部栏 */
+  .top-nav { display: none !important; }
+</style>
+</head>
+<body>
+    <div class="debug-info">
+        📱 messages 页面预览 | 🔄 同步时间: 2025/10/18 21:36:02
+    </div>
+    
+    <div class="page-container">
+        <!-- 统一顶部导航栏 -->
+        <div id="unified-navbar-container"></div>
+        <div class="messages-page custom-component div" data-component="div"><div class="top-nav custom-component div" data-component="div"><div class="nav-content custom-component div" data-component="div"><div class="nav-title custom-component div" data-component="div">私信</div><div class="nav-actions custom-component div" data-component="div"><div class="search-btn custom-component div" onclick="toggleSearch" data-component="div"><div class="search-icon custom-component span" data-component="span">🔍</div></div></div></div><div class="search-bar <span data-expression= custom-component div"showSearch ? 'show' : ''" data-component="div">showSearch ? 'show' : ''</div>"><div class="search-input custom-component input" placeholder="搜索联系人或消息" value="<span data-expression="searchQuery" data-component="input">searchQuery</div>" oninput="onSearchInput" autofocus="<div class="custom-component span" data-expression="showSearch" data-component="span">showSearch</div>" /></div></div><div class="conversation-list custom-component div" data-scroll-y="true" refresher-enabled="true" bindrefresherrefresh="onPullDownRefresh" data-component="div"><div class="conversations custom-component div" data-component="div"><div class="custom-component div" wx:for="<span data-expression="conversations" data-component="div">conversations</div>" data-wx-key="id" class="conversation-item" data-id="<div class="custom-component span" data-expression="item.id" data-component="span">item.id</div>" data-user-id="<div class="custom-component span" data-expression="item.userId" data-component="span">item.userId</div>" data-user-name="<div class="custom-component span" data-expression="item.userName" data-component="span">item.userName</div>" onclick="onConversationTap" oncontextmenu="onDeleteConversation" ><div class="user-avatar-container custom-component div" data-component="div"><div class="user-avatar custom-component img" src="<span data-expression="item.userAvatar" data-component="img">item.userAvatar</div>" style="object-fit: cover" /><div class="custom-component div" wx:if="<span data-expression="item.isOnline" data-component="div">item.isOnline</div>" class="online-indicator"></div><div class="custom-component div" wx:if="<span data-expression="item.unreadCount data-component="div"> 0">item.unreadCount > 0</div>" class="unread-badge"><div class="custom-component span" data-expression="item.unreadCount data-component="span"> 99 ? '99+' : item.unreadCount">item.unreadCount > 99 ? '99+' : item.unreadCount</div></div></div><div class="conversation-info custom-component div" data-component="div"><div class="conversation-header custom-component div" data-component="div"><div class="user-name custom-component span" data-component="span"><div class="custom-component span" data-expression="item.userName" data-component="span">item.userName</div></div><div class="message-time custom-component span" data-component="span"><div class="custom-component span" data-expression="item.lastMessageTime" data-component="span">item.lastMessageTime</div></div></div><div class="last-message custom-component div" data-component="div"><div class="message-content <span data-expression= custom-component span"item.unreadCount data-component="span"> 0 ? 'unread' : ''">item.unreadCount > 0 ? 'unread' : ''</div>"> {{item.messageType === 'image' ? '[图片]' : item.lastMessage}} </div></div></div><div class="conversation-arrow custom-component div" data-component="div"><div class="arrow-icon custom-component span" data-component="span">›</div></div></div></div><div class="loading-container custom-component div" wx:if="<span data-expression="loading" data-component="div">loading</div>"><div class="loading-spinner custom-component div" data-component="div"></div><div class="loading-text custom-component span" data-component="span">加载中...</div></div><div class="empty-state custom-component div" data-wx-if="conversations.length === 0 && !loading" style="display: none;" data-bind-if="conversations.length === 0 && !loading" data-component="div"><div class="empty-icon custom-component img" src="/assets/images/empty-messages.svg" / data-component="img"><div class="empty-title custom-component span" data-component="span">暂无消息</div><div class="empty-subtitle custom-component span" data-component="span">开始与其他会员聊天吧</div><div class="empty-btn custom-component button" onclick="goToMeet" data-component="button">去相遇</div></div></div><div class="custom-component bottom-navbar" current-tab="message" bind:navchange="onNavChange" / data-component="bottom-navbar"></div>
+    </div>
+
+    <script>
+        // API桥接层
+        const wx = {
+            navigateTo: (options) => {
+                console.log('wx.navigateTo:', options);
+                alert('导航到: ' + options.url);
+            },
+            showToast: (options) => {
+                console.log('wx.showToast:', options);
+                alert(options.title);
+            },
+            request: (options) => {
+                console.log('wx.request:', options);
+                // 模拟网络请求
+                setTimeout(() => {
+                    if (options.success) {
+                        options.success({ data: { message: '模拟数据' } });
+                    }
+                }, 1000);
+            }
+        };
+        
+        // 页面数据模拟
+        const pageData = {
+            messages: {
+                // 这里可以添加页面特定的模拟数据
+            }
+        };
+        
+        console.log('🚀 页面加载完成:', 'messages');
+        console.log('📊 页面数据:', pageData);
+    </script>
+<script>
+  // 统一导航栏已通过navbar-loader.js自动加载
+</script>
+
+<!-- 加载统一导航栏 -->
+<script src="components/navbar-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人主页 - 频遇俱乐部</title>
+    <style>
+        /* 基础重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand-subtitle {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .welcome-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .note {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            margin-bottom: 30px;
+            opacity: 0.6;
+        }
+
+        .experience-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            margin-right: 15px;
+        }
+
+        .experience-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .button-group {
+            margin-top: 20px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .brand-title {
+                font-size: 36px;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .experience-btn, .back-btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand-title">PINYU CLUB</div>
+        <div class="brand-subtitle">频遇俱乐部</div>
+        
+        <div class="welcome-text">欢迎来到频遇俱乐部</div>
+        <div class="description">
+            这里是您的个人主页，您可以在这里管理您的个人信息、查看活动记录、与其他会员互动。
+        </div>
+        
+        <div class="note">
+            🎉 登录成功！欢迎回来
+        </div>
+        
+        <div class="disclaimer">
+            请选择您想要进入的页面
+        </div>
+        
+        <div class="button-group">
+            <button class="experience-btn" onclick="navigateToWelcome()">
+                立即体验
+            </button>
+            <button class="back-btn" onclick="goBack()">
+                返回登录
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 跳转到欢迎页面
+        function navigateToWelcome() {
+            // 可以根据需要修改跳转目标
+            window.location.href = 'welcome.html';
+        }
+        
+        // 返回登录页面
+        function goBack() {
+            window.location.href = 'login.html';
+        }
+        
+        // 页面加载完成后检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('个人主页加载完成');
+            
+            // 检查登录状态
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            console.log('登录状态:', isLoggedIn);
+            
+            // 移除自动跳转逻辑，让页面可以独立访问和预览
+            if (!isLoggedIn) {
+                console.log('用户未登录，但页面将保持显示以便开发和预览');
+                // 不再自动跳转，让用户可以正常浏览个人主页
+            } else {
+                console.log('用户已登录，正常显示个人主页');
+            }
+        });
+    </script>
+</body>
+</html>

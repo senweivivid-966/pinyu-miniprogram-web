@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 频遇小程序预览</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="register.css">
+    <script src="js/auth.js"></script>
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        /* 容器样式 */
+        .page-container {
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        /* 响应式设计 */
+        @media screen and (max-width: 414px) {
+            .page-container {
+                max-width: 100%;
+                box-shadow: none;
+            }
+        }
+    </style>
+<style>
+  /* 接入统一通栏后隐藏注册页原头部 */
+  .register-container .header { display: none !important; }
+</style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 统一顶部导航栏 -->
+        <div id="unified-navbar-container"></div>
+        <!-- 注册页面内容 -->
+        <div class="register-container">
+            <!-- 头部导航 -->
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    <span class="back-icon">←</span>
+                </button>
+                <div class="header-title">注册账号</div>
+            </div>
+
+            <!-- 注册表单 -->
+            <form class="register-form" id="registerForm">
+                <div class="error-message" id="errorMessage" style="display: none;"></div>
+                
+                <div class="form-step" id="step1">
+                    <div class="step-title">基本信息</div>
+                    
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="请输入手机号" required>
+                            <span class="input-icon">📱</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="verifyCode" name="verifyCode" class="form-input" placeholder="请输入验证码" required maxlength="6">
+                            <span class="input-icon">🔢</span>
+                            <button type="button" class="verify-btn" onclick="sendVerifyCode()">获取验证码</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="password" id="password" name="password" class="form-input" placeholder="请设置密码（6-20位）" required minlength="6" maxlength="20">
+                            <span class="input-icon">🔒</span>
+                            <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+                        </div>
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="请确认密码" required>
+                            <span class="input-icon">🔒</span>
+                            <span class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="next-btn" onclick="nextStep()">
+                        <span class="btn-text">下一步</span>
+                        <span class="btn-loading" style="display: none;">验证中...</span>
+                    </button>
+                </div>
+
+                <div class="form-step" id="step2" style="display: none;">
+                    <div class="step-title">个人资料</div>
+                    
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="nickname" name="nickname" class="form-input" placeholder="请输入昵称" required maxlength="20">
+                            <span class="input-icon">👤</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">性别</label>
+                        <div class="gender-options">
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="male">
+                                <span class="gender-text">男</span>
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="female">
+                                <span class="gender-text">女</span>
+                            </label>
+                            <label class="gender-option">
+                                <input type="radio" name="gender" value="other">
+                                <span class="gender-text">其他</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="date" id="birthday" name="birthday" class="form-input">
+                            <span class="input-icon">🎂</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="city" name="city" class="form-input" placeholder="请选择所在城市" maxlength="50">
+                            <span class="input-icon">📍</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="prev-btn" onclick="prevStep()">上一步</button>
+                        <button type="submit" class="register-btn">
+                            <span class="btn-text">完成注册</span>
+                            <span class="btn-loading" style="display: none;">注册中...</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 用户协议 -->
+                <div class="agreement">
+                    <label class="agreement-checkbox">
+                        <input type="checkbox" id="agreement" name="agreement" required>
+                        <span class="checkmark"></span>
+                        我已阅读并同意
+                        <a href="#" class="agreement-link">《用户协议》</a>
+                        和
+                        <a href="#" class="agreement-link">《隐私政策》</a>
+                    </label>
+                </div>
+
+                <!-- 登录链接 -->
+                <div class="login-link">
+                    已有账号？<a href="login.html">立即登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let verifyCodeTimer = null;
+        let verifyCodeCount = 60;
+
+        // 返回上一页
+        function goBack() {
+            if (currentStep > 1) {
+                prevStep();
+            } else {
+                window.history.back();
+            }
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 检查密码强度
+        function checkPasswordStrength(password) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            let strength = 0;
+            let text = '';
+            let className = '';
+
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+            switch (strength) {
+                case 0:
+                case 1:
+                    text = '密码强度：弱';
+                    className = 'weak';
+                    break;
+                case 2:
+                case 3:
+                    text = '密码强度：中';
+                    className = 'medium';
+                    break;
+                case 4:
+                case 5:
+                    text = '密码强度：强';
+                    className = 'strong';
+                    break;
+            }
+
+            strengthDiv.textContent = text;
+            strengthDiv.className = `password-strength ${className}`;
+        }
+
+        // 下一步
+        function nextStep() {
+            if (validateStep1()) {
+                currentStep = 2;
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+            }
+        }
+
+        // 上一步
+        function prevStep() {
+            currentStep = 1;
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+        }
+
+        // 验证第一步表单
+        function validateStep1() {
+            const phone = document.getElementById('phone').value;
+            const verifyCode = document.getElementById('verifyCode').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+                showError('请输入正确的手机号');
+                return false;
+            }
+
+            if (!verifyCode || verifyCode.length !== 6) {
+                showError('请输入6位验证码');
+                return false;
+            }
+
+            if (!password || password.length < 6 || password.length > 20) {
+                showError('密码长度应为6-20位');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                showError('两次输入的密码不一致');
+                return false;
+            }
+
+            return true;
+        }
+
+        // 发送验证码
+        function sendVerifyCode() {
+            const phone = document.getElementById('phone').value;
+            const btn = document.querySelector('.verify-btn');
+
+            if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+                showError('请输入正确的手机号');
+                return;
+            }
+
+            // 开始倒计时
+            btn.disabled = true;
+            verifyCodeCount = 60;
+            verifyCodeTimer = setInterval(() => {
+                verifyCodeCount--;
+                btn.textContent = `${verifyCodeCount}s后重发`;
+                
+                if (verifyCodeCount <= 0) {
+                    clearInterval(verifyCodeTimer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                }
+            }, 1000);
+
+            // 模拟发送验证码
+            console.log('发送验证码到:', phone);
+            // 在实际应用中，这里应该调用真实的API
+            setTimeout(() => {
+                showError('验证码已发送，请注意查收（测试验证码：123456）');
+            }, 500);
+        }
+
+        // 切换密码显示/隐藏
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleBtn = passwordInput.parentNode.querySelector('.toggle-password');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        }
+
+        // 表单提交处理
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const agreement = document.getElementById('agreement').checked;
+            
+            if (!agreement) {
+                showError('请先同意用户协议和隐私政策');
+                return;
+            }
+
+            const formData = {
+                phone: document.getElementById('phone').value,
+                verifyCode: document.getElementById('verifyCode').value,
+                password: document.getElementById('password').value,
+                nickname: document.getElementById('nickname').value,
+                gender: document.querySelector('input[name="gender"]:checked')?.value,
+                birthday: document.getElementById('birthday').value,
+                city: document.getElementById('city').value
+            };
+
+            // 显示加载状态
+            const registerBtn = document.querySelector('.register-btn');
+            const btnText = registerBtn.querySelector('.btn-text');
+            const btnLoading = registerBtn.querySelector('.btn-loading');
+            
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            registerBtn.disabled = true;
+
+            // 调用AuthManager的注册方法
+            if (window.authManager) {
+                window.authManager.register(formData).then(success => {
+                    if (success) {
+                        // 注册成功，跳转到首页
+                        window.location.href = 'home-main-page.html';
+                    } else {
+                        // 恢复按钮状态
+                        btnText.style.display = 'inline';
+                        btnLoading.style.display = 'none';
+                        registerBtn.disabled = false;
+                    }
+                });
+            }
+        });
+
+        // 监听密码输入，实时显示强度
+        document.getElementById('password').addEventListener('input', function(e) {
+            checkPasswordStrength(e.target.value);
+        });
+
+        // 加载统一导航栏
+        function loadUnifiedNavbar() {
+            fetch('components/unified-navbar.html')
+                .then(resp => resp.text())
+                .then(html => {
+                    const container = document.getElementById('unified-navbar-container');
+                    if (container) container.innerHTML = html;
+                })
+                .catch(err => console.error('加载统一顶部栏失败:', err));
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUnifiedNavbar();
+            // 等待authManager初始化
+            setTimeout(() => {
+                if (window.authManager && window.authManager.isLoggedIn) {
+                    window.location.href = 'home-main-page.html';
+                }
+            }, 100);
+
+            // 设置默认生日为18岁
+            const today = new Date();
+            const defaultBirthday = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            document.getElementById('birthday').value = defaultBirthday.toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

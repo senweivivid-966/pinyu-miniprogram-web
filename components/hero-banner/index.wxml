@@ -1,0 +1,14 @@
+<!-- components/hero-banner/index.wxml -->
+<view class="hero-banner" style="height: {{height}};" bindtap="onBannerTap">
+  <image 
+    wx:if="{{backgroundImage}}" 
+    class="hero-bg" 
+    src="{{backgroundImage}}" 
+    mode="aspectFill"
+  ></image>
+  <view class="hero-content">
+    <view class="hero-title">{{title}}</view>
+    <view class="hero-subtitle">{{subtitle}}</view>
+  </view>
+  <view class="hero-overlay"></view>
+</view>

@@ -1,0 +1,13 @@
+/* pages/member/index.wxss */
+.container-page {
+  padding: 16px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+}

@@ -1,0 +1,31 @@
+/* pages/test-simple/index.wxss */
+.container {
+  padding: 40rpx;
+  text-align: center;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #FF6B9D;
+  margin-bottom: 40rpx;
+}
+
+.subtitle {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.info {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  max-width: 600rpx;
+}

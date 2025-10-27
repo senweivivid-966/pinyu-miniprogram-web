@@ -1,0 +1,6 @@
+{
+  "command": "npm run dev",
+  "serverUrl": "http://localhost:8000/social-discovery-page.html",
+  "authenticateProxy": false,
+  "commitMode": "commits"
+}

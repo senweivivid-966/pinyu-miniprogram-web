@@ -1,0 +1,103 @@
+<!--pages/profile/index.wxml-->
+<view class="profile-page">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="nav-content">
+      <view class="nav-title">个人中心</view>
+      <view class="nav-actions">
+        <view class="settings-btn" bindtap="onMenuItemTap" data-id="notifications">
+          <text class="settings-icon">⚙️</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-header">
+      <view class="avatar-container" bindtap="onAvatarTap">
+        <image class="user-avatar" src="{{userInfo.avatar}}" mode="aspectFill" />
+        <view class="avatar-edit-icon">📷</view>
+        <view wx:if="{{userInfo.verified}}" class="verified-badge">✓</view>
+      </view>
+      
+      <view class="user-info">
+        <view class="user-name-row">
+          <text class="user-name">{{userInfo.name}}</text>
+          <view wx:if="{{userInfo.vipLevel === 'premium'}}" class="vip-badge">VIP</view>
+        </view>
+        <view class="user-meta">
+          <text class="user-age">{{userInfo.age}}岁</text>
+          <text class="separator">·</text>
+          <text class="user-location">{{userInfo.city}}</text>
+        </view>
+        <view class="user-occupation">{{userInfo.occupation}} @ {{userInfo.company}}</view>
+      </view>
+    </view>
+
+    <view class="user-bio">{{userInfo.bio}}</view>
+
+    <!-- 完善度进度条 -->
+    <view class="completion-section">
+      <view class="completion-header">
+        <text class="completion-label">资料完善度</text>
+        <text class="completion-percent">{{userInfo.profileCompletion}}%</text>
+      </view>
+      <view class="completion-bar">
+        <view class="completion-progress" style="width: {{userInfo.profileCompletion}}%"></view>
+      </view>
+    </view>
+
+    <!-- 统计数据 -->
+    <view class="stats-section">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.events}}</text>
+        <text class="stat-label">参与活动</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.matches}}</text>
+        <text class="stat-label">成功匹配</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.likes}}</text>
+        <text class="stat-label">收到喜欢</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.views}}</text>
+        <text class="stat-label">资料浏览</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单列表 -->
+  <view class="menu-section">
+    <view 
+      wx:for="{{menuItems}}" 
+      wx:key="id" 
+      class="menu-item" 
+      bindtap="onMenuItemTap" 
+      data-id="{{item.id}}"
+    >
+      <view class="menu-icon">{{item.icon}}</view>
+      <view class="menu-content">
+        <view class="menu-title">{{item.title}}</view>
+        <view class="menu-subtitle">{{item.subtitle}}</view>
+      </view>
+      <view class="menu-right">
+        <view wx:if="{{item.badge}}" class="menu-badge">{{item.badge}}</view>
+        <view wx:if="{{item.arrow}}" class="menu-arrow">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 底部导航 -->
+  <bottom-navbar current-tab="{{currentTab}}" bind:change="onNavChange" />
+</view>

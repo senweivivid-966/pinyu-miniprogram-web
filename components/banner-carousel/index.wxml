@@ -1,0 +1,38 @@
+<!-- components/banner-carousel/index.wxml -->
+<view class="banner-carousel">
+  <swiper 
+    class="carousel-swiper"
+    style="height: {{height}};"
+    autoplay="{{autoplay}}"
+    interval="{{interval}}"
+    circular="{{circular}}"
+    indicator-dots="{{indicatorDots}}"
+    indicator-color="rgba(255, 255, 255, 0.4)"
+    indicator-active-color="#fff"
+    bindchange="onSwiperChange"
+  >
+    <swiper-item 
+      wx:for="{{banners}}" 
+      wx:key="id"
+      class="carousel-item"
+      data-banner="{{item}}"
+      bindtap="onBannerTap"
+    >
+      <view class="banner-content">
+        <image 
+          class="banner-image" 
+          src="{{item.image}}" 
+          mode="aspectFill"
+          lazy-load="{{true}}"
+        ></image>
+        <view class="banner-overlay">
+          <view class="banner-title">{{item.title}}</view>
+          <view wx:if="{{item.subtitle}}" class="banner-subtitle">{{item.subtitle}}</view>
+          <button wx:if="{{item.buttonText}}" class="banner-button" bindtap="onButtonTap" data-banner="{{item}}">
+            {{item.buttonText}}
+          </button>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>

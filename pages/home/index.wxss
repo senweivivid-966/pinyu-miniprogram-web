@@ -1,0 +1,356 @@
+/* pages/home/index.wxss */
+
+/* 页面容器 */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 120rpx; /* 为底部导航栏留出空间 */
+  padding-top: calc(120rpx + env(safe-area-inset-top)); /* 为固定顶部栏留出空间 */
+  box-sizing: border-box;
+}
+
+/* 顶部栏 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 32rpx;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #f0f0f0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  min-height: 120rpx;
+  padding-top: calc(16rpx + env(safe-area-inset-top));
+  box-sizing: border-box;
+}
+
+/* 左侧品牌标题 */
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 120rpx;
+  flex-shrink: 0;
+}
+
+.brand-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FF6B9D;
+  line-height: 1.2;
+  margin-bottom: 4rpx;
+}
+
+.brand-subtitle {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FF6B9D;
+  line-height: 1.2;
+}
+
+/* 中间导航菜单 */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+  justify-content: center;
+  margin: 0 20rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 520rpx; /* 限制最大宽度 */
+}
+
+.nav-item {
+  font-size: 28rpx;
+  color: #666666;
+  padding: 12rpx 18rpx;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+.nav-item.nav-active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #FF6B9D 0%, #C147E9 100%);
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.3);
+}
+
+/* 右侧消息图标 */
+.header-right {
+  display: flex;
+  align-items: center;
+  min-width: 120rpx;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.message-icon {
+  position: relative;
+  padding: 12rpx 20rpx;
+  border-radius: 20rpx;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #e9ecef;
+  min-width: 80rpx;
+  min-height: 48rpx;
+}
+
+.icon-text {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.message-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  background-color: #ff4757;
+  color: #ffffff;
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 20rpx;
+  min-width: 28rpx;
+  height: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* 页面内容区域 */
+.content {
+  padding: 40rpx 32rpx 0;
+  background-color: #f8f9fa;
+}
+
+/* 欢迎文本 */
+.welcome-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 48rpx;
+  background: linear-gradient(135deg, #FF6B9D 0%, #C147E9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.4;
+}
+
+/* 快速操作区域 */
+.quick-actions {
+  margin-bottom: 48rpx;
+}
+
+.quick-actions-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+  padding-left: 12rpx;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24rpx;
+  padding: 0 12rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28rpx 20rpx;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f0f0f0;
+  min-height: 120rpx;
+}
+
+.action-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.action-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  margin-bottom: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.action-icon.activity {
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8E8E 100%);
+}
+
+.action-icon.dating {
+  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+}
+
+.action-icon.chat {
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+}
+
+.action-icon.resources {
+  background: linear-gradient(135deg, #7ED321 0%, #5CB85C 100%);
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #666666;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 信息条区域 */
+.info-section {
+  margin-bottom: 24rpx;
+}
+
+.info-banner {
+  background-color: #ffffff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin: 0 24rpx 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  border: 1rpx solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-title {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 4rpx;
+}
+
+.info-subtitle {
+  font-size: 20rpx;
+  color: #666666;
+}
+
+.info-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.chip {
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 18rpx;
+  font-weight: 500;
+}
+
+.chip-info {
+  background-color: #E3F2FD;
+  color: #1976D2;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #FF6B9D 0%, #C147E9 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 16rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(255, 107, 157, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-sm {
+  padding: 6rpx 12rpx;
+  font-size: 18rpx;
+}
+
+.btn-secondary:active {
+  transform: translateY(1rpx);
+  box-shadow: 0 1rpx 4rpx rgba(255, 107, 157, 0.4);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 32rpx;
+  width: 600rpx;
+  max-width: 90vw;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  border-bottom: 2rpx solid var(--border-color);
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: var(--text-secondary);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 32rpx;
+  text-align: center;
+}
+
+.modal-text {
+  font-size: 32rpx;
+  color: var(--text-secondary);
+  margin-bottom: 32rpx;
+}
+
+.modal-body .btn {
+  width: 100%;
+}

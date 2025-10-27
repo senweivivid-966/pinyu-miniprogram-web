@@ -1,0 +1,17 @@
+<!-- components/quick-actions/index.wxml -->
+<view class="quick-actions">
+  <view class="actions-grid" style="grid-template-columns: repeat({{columns}}, 1fr);">
+    <view 
+      wx:for="{{actions}}" 
+      wx:key="id" 
+      class="action-item" 
+      data-action="{{item}}"
+      bindtap="onActionTap"
+    >
+      <view class="action-icon" style="background-color: {{item.color}};">
+        <text class="icon-text">{{item.name.charAt(0)}}</text>
+      </view>
+      <text class="action-name">{{item.name}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 频遇小程序预览</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="profile.css">
+    <script src="js/auth.js"></script>
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+        }
+        
+        /* 容器样式 */
+        .page-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 75%, #f5576c 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* 调试信息 */
+        .debug-info {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 统一顶部导航栏 -->
+        <div id="unified-navbar-container"></div>
+
+        <!-- 用户卡片 -->
+        <div class="user-card">
+            <!-- 头像区域 -->
+            <div class="avatar-section">
+                <div class="avatar-container" onclick="uploadAvatar()">
+                    <img id="userAvatar" class="user-avatar" src="https://via.placeholder.com/100x100/007AFF/FFFFFF?text=头像" alt="用户头像">
+                    <div class="avatar-edit-overlay">
+                        <span class="camera-icon">📷</span>
+                        <span class="edit-text">更换头像</span>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarChange(event)">
+                </div>
+                <div class="user-basic-info">
+                    <div class="user-name-row">
+                        <span id="userName" class="user-name">用户昵称</span>
+                        <span class="vip-badge" id="vipBadge" style="display: none;">VIP</span>
+                    </div>
+                    <div class="user-meta">
+                        <span id="userAge" class="user-age">25岁</span>
+                        <span class="separator">·</span>
+                        <span id="userLocation" class="user-location">北京</span>
+                    </div>
+                    <div id="userOccupation" class="user-occupation">产品经理 @ 科技公司</div>
+                </div>
+            </div>
+
+            <!-- 个人简介 -->
+            <div class="user-bio-section">
+                <div class="bio-label">个人简介</div>
+                <div id="userBio" class="user-bio" onclick="editBio()">点击添加个人简介，让大家更了解你...</div>
+            </div>
+
+            <!-- 资料完善度 -->
+            <div class="completion-section">
+                <div class="completion-header">
+                    <span class="completion-label">资料完善度</span>
+                    <span id="completionPercent" class="completion-percent">75%</span>
+                </div>
+                <div class="completion-bar">
+                    <div id="completionProgress" class="completion-progress" style="width: 75%"></div>
+                </div>
+                <div class="completion-tips">完善资料可提高匹配成功率</div>
+            </div>
+
+            <!-- 统计数据 -->
+            <div class="stats-section">
+                <div class="stat-item">
+                    <span id="statEvents" class="stat-number">12</span>
+                    <span class="stat-label">参与活动</span>
+                </div>
+                <div class="stat-item">
+                    <span id="statMatches" class="stat-number">8</span>
+                    <span class="stat-label">成功匹配</span>
+                </div>
+                <div class="stat-item">
+                    <span id="statLikes" class="stat-number">25</span>
+                    <span class="stat-label">收到喜欢</span>
+                </div>
+                <div class="stat-item">
+                    <span id="statViews" class="stat-number">156</span>
+                    <span class="stat-label">资料浏览</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 菜单区域 -->
+        <div class="menu-section">
+            <!-- 个人信息管理 -->
+            <div class="menu-group">
+                <div class="menu-group-title">个人信息</div>
+                <div class="menu-item" onclick="editProfile()">
+                    <div class="menu-icon">👤</div>
+                    <div class="menu-content">
+                        <div class="menu-title">编辑资料</div>
+                        <div class="menu-subtitle">修改昵称、性别、生日等</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="editPhotos()">
+                    <div class="menu-icon">📸</div>
+                    <div class="menu-content">
+                        <div class="menu-title">我的照片</div>
+                        <div class="menu-subtitle">管理个人照片</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="editInterests()">
+                    <div class="menu-icon">❤️</div>
+                    <div class="menu-content">
+                        <div class="menu-title">兴趣爱好</div>
+                        <div class="menu-subtitle">设置你的兴趣标签</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+
+            <!-- 账号设置 -->
+            <div class="menu-group">
+                <div class="menu-group-title">账号设置</div>
+                <div class="menu-item" onclick="changePassword()">
+                    <div class="menu-icon">🔒</div>
+                    <div class="menu-content">
+                        <div class="menu-title">修改密码</div>
+                        <div class="menu-subtitle">更改登录密码</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="bindEmail()">
+                    <div class="menu-icon">📧</div>
+                    <div class="menu-content">
+                        <div class="menu-title">绑定邮箱</div>
+                        <div class="menu-subtitle">用于找回密码</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="privacySettings()">
+                    <div class="menu-icon">🛡️</div>
+                    <div class="menu-content">
+                        <div class="menu-title">隐私设置</div>
+                        <div class="menu-subtitle">管理个人隐私</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+
+            <!-- 其他功能 -->
+            <div class="menu-group">
+                <div class="menu-group-title">其他</div>
+                <div class="menu-item" onclick="notifications()">
+                    <div class="menu-icon">🔔</div>
+                    <div class="menu-content">
+                        <div class="menu-title">消息通知</div>
+                        <div class="menu-subtitle">管理通知设置</div>
+                    </div>
+                    <div class="menu-badge">3</div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="feedback()">
+                    <div class="menu-icon">💬</div>
+                    <div class="menu-content">
+                        <div class="menu-title">意见反馈</div>
+                        <div class="menu-subtitle">帮助我们改进</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+                <div class="menu-item" onclick="about()">
+                    <div class="menu-icon">ℹ️</div>
+                    <div class="menu-content">
+                        <div class="menu-title">关于频遇</div>
+                        <div class="menu-subtitle">版本 1.0.0</div>
+                    </div>
+                    <div class="menu-arrow">›</div>
+                </div>
+            </div>
+
+            <!-- 退出登录 -->
+            <div class="logout-section">
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </div>
+
+        <!-- 编辑弹窗 -->
+        <div id="editModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">编辑信息</span>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="form-group">
+                            <label class="form-label">昵称</label>
+                            <input type="text" id="editNickname" class="form-input" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">性别</label>
+                            <div class="gender-options">
+                                <label class="gender-option">
+                                    <input type="radio" name="editGender" value="male">
+                                    <span class="gender-text">男</span>
+                                </label>
+                                <label class="gender-option">
+                                    <input type="radio" name="editGender" value="female">
+                                    <span class="gender-text">女</span>
+                                </label>
+                                <label class="gender-option">
+                                    <input type="radio" name="editGender" value="other">
+                                    <span class="gender-text">其他</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">生日</label>
+                            <input type="date" id="editBirthday" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">所在城市</label>
+                            <input type="text" id="editCity" class="form-input" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">职业</label>
+                            <input type="text" id="editOccupation" class="form-input" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">公司</label>
+                            <input type="text" id="editCompany" class="form-input" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">个人简介</label>
+                            <textarea id="editBioText" class="form-textarea" maxlength="200" placeholder="介绍一下自己吧..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                    <button type="button" class="btn-save" onclick="saveProfile()">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载状态 -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">保存中...</div>
+        </div>
+    </div>
+
+    <script>
+        // 用户数据管理
+        let userProfile = {
+            avatar: 'https://via.placeholder.com/100x100/007AFF/FFFFFF?text=头像',
+            nickname: '用户昵称',
+            gender: 'male',
+            age: 25,
+            birthday: '1999-01-01',
+            city: '北京',
+            occupation: '产品经理',
+            company: '科技公司',
+            bio: '点击添加个人简介，让大家更了解你...',
+            profileCompletion: 75,
+            stats: {
+                events: 12,
+                matches: 8,
+                likes: 25,
+                views: 156
+            }
+        };
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!AuthManager.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 加载用户数据
+            loadUserProfile();
+        });
+
+        // 加载用户资料
+        function loadUserProfile() {
+            const user = AuthManager.getCurrentUser();
+            if (user) {
+                // 更新用户基本信息
+                document.getElementById('userName').textContent = user.nickname || userProfile.nickname;
+                document.getElementById('userAge').textContent = calculateAge(user.birthday || userProfile.birthday) + '岁';
+                document.getElementById('userLocation').textContent = user.city || userProfile.city;
+                document.getElementById('userOccupation').textContent = 
+                    (user.occupation || userProfile.occupation) + ' @ ' + (user.company || userProfile.company);
+                
+                // 更新个人简介
+                const bioElement = document.getElementById('userBio');
+                if (user.bio && user.bio.trim()) {
+                    bioElement.textContent = user.bio;
+                    bioElement.classList.remove('placeholder');
+                } else {
+                    bioElement.textContent = '点击添加个人简介，让大家更了解你...';
+                    bioElement.classList.add('placeholder');
+                }
+
+                // 更新头像
+                if (user.avatar) {
+                    document.getElementById('userAvatar').src = user.avatar;
+                }
+
+                // 计算并更新资料完善度
+                updateProfileCompletion(user);
+            }
+        }
+
+        // 计算年龄
+        function calculateAge(birthday) {
+            const today = new Date();
+            const birthDate = new Date(birthday);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // 更新资料完善度
+        function updateProfileCompletion(user) {
+            let completedFields = 0;
+            const totalFields = 8;
+
+            if (user.nickname) completedFields++;
+            if (user.gender) completedFields++;
+            if (user.birthday) completedFields++;
+            if (user.city) completedFields++;
+            if (user.occupation) completedFields++;
+            if (user.company) completedFields++;
+            if (user.bio && user.bio.trim()) completedFields++;
+            if (user.avatar && user.avatar !== userProfile.avatar) completedFields++;
+
+            const percentage = Math.round((completedFields / totalFields) * 100);
+            document.getElementById('completionPercent').textContent = percentage + '%';
+            document.getElementById('completionProgress').style.width = percentage + '%';
+        }
+
+        // 头像上传
+        function uploadAvatar() {
+            document.getElementById('avatarInput').click();
+        }
+
+        function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('图片大小不能超过5MB', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarUrl = e.target.result;
+                    document.getElementById('userAvatar').src = avatarUrl;
+                    
+                    // 保存到用户数据
+                    const user = AuthManager.getCurrentUser();
+                    user.avatar = avatarUrl;
+                    AuthManager.updateUser(user);
+                    
+                    showToast('头像更新成功', 'success');
+                    updateProfileCompletion(user);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 编辑个人简介
+        function editBio() {
+            const currentBio = AuthManager.getCurrentUser().bio || '';
+            const newBio = prompt('编辑个人简介（最多200字）：', currentBio);
+            
+            if (newBio !== null) {
+                if (newBio.length > 200) {
+                    showToast('个人简介不能超过200字', 'error');
+                    return;
+                }
+
+                const user = AuthManager.getCurrentUser();
+                user.bio = newBio;
+                AuthManager.updateUser(user);
+                
+                loadUserProfile();
+                showToast('个人简介更新成功', 'success');
+            }
+        }
+
+        // 编辑资料
+        function editProfile() {
+            const user = AuthManager.getCurrentUser();
+            
+            // 填充表单数据
+            document.getElementById('editNickname').value = user.nickname || '';
+            document.getElementById('editBirthday').value = user.birthday || '';
+            document.getElementById('editCity').value = user.city || '';
+            document.getElementById('editOccupation').value = user.occupation || '';
+            document.getElementById('editCompany').value = user.company || '';
+            document.getElementById('editBioText').value = user.bio || '';
+            
+            // 设置性别
+            const genderRadios = document.querySelectorAll('input[name="editGender"]');
+            genderRadios.forEach(radio => {
+                radio.checked = radio.value === user.gender;
+            });
+
+            // 显示弹窗
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        // 保存资料
+        function saveProfile() {
+            const nickname = document.getElementById('editNickname').value.trim();
+            const birthday = document.getElementById('editBirthday').value;
+            const city = document.getElementById('editCity').value.trim();
+            const occupation = document.getElementById('editOccupation').value.trim();
+            const company = document.getElementById('editCompany').value.trim();
+            const bio = document.getElementById('editBioText').value.trim();
+            const gender = document.querySelector('input[name="editGender"]:checked')?.value;
+
+            // 验证必填字段
+            if (!nickname) {
+                showToast('请输入昵称', 'error');
+                return;
+            }
+
+            if (nickname.length > 20) {
+                showToast('昵称不能超过20个字符', 'error');
+                return;
+            }
+
+            if (bio.length > 200) {
+                showToast('个人简介不能超过200字', 'error');
+                return;
+            }
+
+            // 显示加载状态
+            showLoading(true);
+
+            // 模拟保存延迟
+            setTimeout(() => {
+                const user = AuthManager.getCurrentUser();
+                user.nickname = nickname;
+                user.gender = gender;
+                user.birthday = birthday;
+                user.city = city;
+                user.occupation = occupation;
+                user.company = company;
+                user.bio = bio;
+
+                AuthManager.updateUser(user);
+                
+                showLoading(false);
+                closeModal();
+                loadUserProfile();
+                showToast('资料保存成功', 'success');
+            }, 1000);
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // 显示加载状态
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // 其他功能
+        function goBack() {
+            window.history.back();
+        }
+
+        function openSettings() {
+            showToast('设置功能开发中...', 'info');
+        }
+
+        function editPhotos() {
+            showToast('照片管理功能开发中...', 'info');
+        }
+
+        function editInterests() {
+            showToast('兴趣爱好功能开发中...', 'info');
+        }
+
+        function changePassword() {
+            const currentPassword = prompt('请输入当前密码：');
+            if (!currentPassword) return;
+
+            const user = AuthManager.getCurrentUser();
+            if (currentPassword !== user.password) {
+                showToast('当前密码错误', 'error');
+                return;
+            }
+
+            const newPassword = prompt('请输入新密码（至少6位）：');
+            if (!newPassword) return;
+
+            if (newPassword.length < 6) {
+                showToast('密码至少需要6位', 'error');
+                return;
+            }
+
+            const confirmPassword = prompt('请再次输入新密码：');
+            if (newPassword !== confirmPassword) {
+                showToast('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            user.password = newPassword;
+            AuthManager.updateUser(user);
+            showToast('密码修改成功', 'success');
+        }
+
+        function bindEmail() {
+            const email = prompt('请输入要绑定的邮箱：');
+            if (!email) return;
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('请输入有效的邮箱地址', 'error');
+                return;
+            }
+
+            const user = AuthManager.getCurrentUser();
+            user.email = email;
+            AuthManager.updateUser(user);
+            showToast('邮箱绑定成功', 'success');
+        }
+
+        function privacySettings() {
+            showToast('隐私设置功能开发中...', 'info');
+        }
+
+        function notifications() {
+            showToast('消息通知功能开发中...', 'info');
+        }
+
+        function feedback() {
+            showToast('意见反馈功能开发中...', 'info');
+        }
+
+        function about() {
+            alert('频遇 v1.0.0\n\n一个专注于真实社交的平台\n让每一次相遇都有意义');
+        }
+
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                AuthManager.logout();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 消息提示
+        function showToast(message, type = 'info') {
+            // 创建toast元素
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            
+            // 添加样式
+            Object.assign(toast.style, {
+                position: 'fixed',
+                top: '20px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '14px',
+                zIndex: '10000',
+                opacity: '0',
+                transition: 'opacity 0.3s ease'
+            });
+
+            // 设置背景色
+            switch (type) {
+                case 'success':
+                    toast.style.backgroundColor = '#4CAF50';
+                    break;
+                case 'error':
+                    toast.style.backgroundColor = '#f44336';
+                    break;
+                case 'warning':
+                    toast.style.backgroundColor = '#ff9800';
+                    break;
+                default:
+                    toast.style.backgroundColor = '#2196F3';
+            }
+
+            document.body.appendChild(toast);
+
+            // 显示动画
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+
+            // 自动隐藏
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 统一导航栏已通过navbar-loader.js自动加载
+        
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+        });
+
+        // 点击弹窗外部关闭
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+    
+    <!-- 加载统一导航栏 -->
+    <script src="components/navbar-loader.js"></script>
+</body>
+</html>

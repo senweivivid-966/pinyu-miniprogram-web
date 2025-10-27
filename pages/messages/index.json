@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "私信",
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "bottom-navbar": "/components/bottom-navbar/index"
+  }
+}

@@ -1,0 +1,96 @@
+/* components/search-input/index.wxss */
+.search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 0 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.search-input--hero {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  height: 40px;
+}
+
+.search-input--sm {
+  height: 32px;
+  padding: 0 10px;
+}
+
+.search-input__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.search-input__icon-img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+}
+
+.search-input__field {
+  flex: 1;
+  height: 100%;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search-input__placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.search-input__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  margin-left: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.search-input__filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.search-input__filter-img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+}
+
+/* Hero 变体特殊样式 */
+.search-input--hero .search-input__field {
+  font-size: 15px;
+}
+
+.search-input--hero .search-input__clear {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+}
+
+.search-input--hero .search-input__filter {
+  background: rgba(0, 0, 0, 0.08);
+}

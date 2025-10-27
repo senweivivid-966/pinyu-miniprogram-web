@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>频遇小程序 - Web预览版</title>
+    <link rel="stylesheet" href="components/bottom-navbar.css">
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 主题色彩变量 */
+        :root {
+            --primary-color: #FF6B9D;
+            --secondary-color: #EC4899;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 模拟小程序顶部导航栏样式 - 精确复刻截图1 */
+        .miniprogram-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .navbar-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: auto;
+            margin-right: 12px;
+            padding: 2px 4px;
+            line-height: 1;
+            height: 40px;
+            margin-top: 12px;
+        }
+
+        .navbar-brand-unified {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333333;
+            line-height: 1.2;
+            letter-spacing: 0;
+            margin: 0;
+            padding: 0;
+            display: block;
+            margin-top: 0px;
+        }
+
+        .navbar-center {
+            display: flex;
+            gap: 16px;
+            flex: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item-multiline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
+            justify-content: space-between;
+            height: 40px;
+        }
+
+        .nav-line {
+            display: block;
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+        }
+
+        .nav-line:first-child {
+            align-self: flex-start;
+            margin-bottom: 0;
+        }
+        
+        .nav-line:last-child {
+            align-self: flex-start;
+            margin-bottom: 0;
+        }
+
+        /* 移动端触摸反馈支持 - 顶部导航 */
+        .nav-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .nav-item:active,
+        .nav-item:focus,
+        .nav-item.active-touch {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        .nav-item:active .nav-line,
+        .nav-item:focus .nav-line,
+        .nav-item.active-touch .nav-line {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-item:hover {
+            color: #666;
+        }
+
+        .nav-item.active {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            min-width: auto;
+            justify-content: flex-end;
+            margin-left: 10px;
+            margin-right: 15px;
+        }
+
+        .message-badge {
+            position: absolute;
+            top: -5px;
+            right: -15px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            writing-mode: horizontal-tb;
+            text-orientation: mixed;
+            z-index: 10;
+        }
+
+        /* 模拟小程序底部TabBar样式 - 精确复刻截图2 */
+        .miniprogram-tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 30px 18px 30px;
+            z-index: 1000;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 4px 0px;
+            text-decoration: none;
+            color: #8e8e93;
+            margin: 0 8px;
+            max-width: 60px;
+        }
+
+        .tab-item.active {
+            color: #1a1a1a;
+        }
+
+        .tab-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+            transition: all 0.2s ease;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333333;
+        }
+
+        .tab-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: #333333;
+        }
+
+        .tab-text {
+            font-size: 15px;
+            color: #333333;
+            font-weight: 500;
+            line-height: 1.2;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item:first-child .tab-text {
+            font-weight: 400;
+        }
+
+        .tab-item.active .tab-icon {
+            color: #333333;
+        }
+
+        .tab-item.active .tab-text {
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .tab-item:hover .tab-icon,
+        .tab-item:hover .tab-text {
+            color: #666;
+        }
+
+        /* 添加点击效果样式 */
+        /* 移动端触摸反馈支持 */
+        .tab-item {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .tab-item:active,
+        .tab-item:focus,
+        .tab-item.active-touch {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+
+        .tab-item:active .tab-text,
+        .tab-item:focus .tab-text,
+        .tab-item.active-touch .tab-text {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .tab-item:active .tab-icon,
+        .tab-item:focus .tab-icon,
+        .tab-item.active-touch .tab-icon {
+            color: #6e15ff;
+        }
+
+        /* 发布图标特殊样式 */
+        .publish-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .publish-badge {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            flex-shrink: 0;
+            aspect-ratio: 1;
+        }
+
+        .publish-badge svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            fill: white;
+        }
+
+        /* 调整容器页面的内边距 */
+        .container-page {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+            padding-top: 80px; /* 为顶部导航栏留出空间 */
+            padding-bottom: 75px; /* 为底部导航栏留出空间 */
+            min-height: 100vh;
+            background: linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 立即加入板块样式 */
+        .join-section {
+            margin: 16px 0;
+            padding: 0 4px;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .join-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 12px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+            visibility: visible !important;
+        }
+
+        .join-content {
+            text-align: left;
+            flex: 1;
+        }
+        
+        .join-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .join-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .join-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .join-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .join-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        /* 会员头像轮播样式 */
+        .members-carousel-section {
+            margin: 20px 0;
+            padding: 0 4px;
+        }
+        
+        .members-carousel-container {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 16px;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .members-carousel-track {
+            display: flex;
+            gap: 16px;
+            animation: scroll 20s linear infinite;
+        }
+        
+        .member-avatar {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border: 3px solid rgba(255,255,255,0.8);
+        }
+        
+        .member-avatar svg {
+            width: 40px;
+            height: 40px;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* 轮播海报栏样式 */
+        .carousel-section {
+            margin: 20px 0;
+            padding: 0 4px;
+        }
+        
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 比例 (9/16 * 100%) */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .slide-content {
+            display: flex;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .brand-info {
+            flex: 1;
+            color: white;
+        }
+        
+        .brand-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .brand-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            opacity: 0.9;
+        }
+        
+        .brand-description {
+            font-size: 12px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .brand-slogan {
+            font-size: 13px;
+            font-weight: 600;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .phone-mockup {
+            width: 120px;
+            height: 240px;
+            background: #000;
+            border-radius: 20px;
+            padding: 8px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .match-card {
+            background: linear-gradient(135deg, #FF6B9D, #EC4899);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .match-avatar {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .match-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .match-details {
+            font-size: 10px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        
+        .match-interests {
+            font-size: 9px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+        
+        .match-score {
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+        /* 移动端优化 */
+        @media (min-width: 768px) {
+            .container-page {
+                max-width: 414px;
+                margin: 0 auto;
+            }
+        }
+
+        /* 组件样式 */
+
+        .search-section {
+            padding: 0 4px;
+            margin-top: 20px;
+            margin-bottom: 16px;
+        }
+
+        .component-search-input {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+
+        .component-hero-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 16px;
+            padding: 20px 16px;
+            margin-bottom: 16px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+        }
+
+        .hero-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .hero-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .hero-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .banner-section {
+            padding: 0 4px;
+            margin-bottom: 16px;
+        }
+
+        .component-banner-carousel {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .component-banner-carousel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            pointer-events: none;
+        }
+
+        .component-banner-carousel .banner-content {
+            z-index: 1;
+            text-align: center;
+        }
+
+        .component-banner-carousel .banner-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .component-banner-carousel .banner-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .component-banner-carousel .banner-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .component-banner-carousel .banner-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* 轮播指示器样式 */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            background: transparent;
+            margin-top: 10px;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .indicator.active {
+            width: 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .indicator:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.2);
+        }
+
+
+
+        .member-name {
+            font-size: 11px;
+            color: var(--text-primary);
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+
+        .info-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .info-subtitle {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .info-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .chip-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            color: white;
+            padding: 4px 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .events-section {
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-more {
+            font-size: 12px;
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .component-event-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .event-cover {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            position: relative;
+        }
+
+        .event-cover::after {
+            content: '活动封面';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .event-content {
+            padding: 16px;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .event-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .event-location {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .event-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-capacity {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .event-register-btn {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 414px) {
+            .container-page {
+                padding: 12px;
+            }
+            
+            .hero-title {
+                font-size: 16px;
+            }
+            
+            .hero-subtitle {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container-page {
+                padding: 8px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            color: var(--text-secondary);
+        }
+
+        /* 隐藏元素 */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- 模拟小程序顶部导航栏 -->
+    <div class="miniprogram-navbar">
+        <div class="navbar-left">
+            <div class="navbar-brand-unified">PINYU<br>CLUB</div>
+        </div>
+        <div class="navbar-center">
+            <a href="#" class="nav-item nav-item-multiline active" onclick="handleNavClick('home')">
+                <span class="nav-line">首</span>
+                <span class="nav-line">页</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('my')">
+                <span class="nav-line">我的</span>
+                <span class="nav-line">主页</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('match')">
+                <span class="nav-line">同频</span>
+                <span class="nav-line">相遇</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('test')">
+                <span class="nav-line">测</span>
+                <span class="nav-line">测</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('activity')">
+                <span class="nav-line">活</span>
+                <span class="nav-line">动</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('community')">
+                <span class="nav-line">社</span>
+                <span class="nav-line">区</span>
+            </a>
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleNavClick('member')">
+                <span class="nav-line">会员</span>
+                <span class="nav-line">中心</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <a href="#" class="nav-item nav-item-multiline" onclick="handleMessageClick()" style="position: relative;">
+                <span class="nav-line">消</span>
+                <span class="nav-line">息</span>
+                <span class="message-badge">126</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container-page theme-default">
+
+        <!-- 顶部搜索栏 -->
+        <div class="search-section">
+            <div class="component-search-input">
+                <input type="text" class="search-input" placeholder="Search for jobs" id="searchInput">
+            </div>
+        </div>
+
+        <!-- 立即加入板块 -->
+        <div class="join-section">
+            <div class="join-card">
+                <div class="join-content">
+                    <div class="join-title">同频终相逢，共振即永恒</div>
+                    <div class="join-subtitle">AI驱动的高质量线下活动与专属社交</div>
+                </div>
+                <button class="join-button" onclick="handleJoinClick()">立即加入</button>
+            </div>
+        </div>
+
+        <!-- 轮播海报栏 -->
+        <div class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel-slide active">
+                    <div class="slide-content">
+                        <div class="brand-info">
+                            <div class="brand-title">PINYU CLUB</div>
+                            <div class="brand-subtitle">高端社交俱乐部小程序</div>
+                            <div class="brand-description">专为25-65岁高净值人群打造的高质量社交平台</div>
+                            <div class="brand-slogan">同频终相逢，共振即永恒</div>
+                        </div>
+                        <div class="phone-mockup">
+                            <div class="phone-screen">
+                                <div class="match-card">
+                                    <div class="match-avatar">👤</div>
+                                    <div class="match-info">
+                                        <div class="match-name">Sarah Chen</div>
+                                        <div class="match-details">投资顾问 · 32岁</div>
+                                        <div class="match-interests">艺术收藏 · 红酒品鉴</div>
+                                    </div>
+                                    <div class="match-score">95%匹配</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <div class="indicator active" onclick="goToSlide(0)"></div>
+                <div class="indicator" onclick="goToSlide(1)"></div>
+                <div class="indicator" onclick="goToSlide(2)"></div>
+                <div class="indicator" onclick="goToSlide(3)"></div>
+                <div class="indicator" onclick="goToSlide(4)"></div>
+            </div>
+        </div>
+
+        <!-- 会员头像轮播区域 -->
+        <div class="members-carousel-section">
+            <div class="members-carousel-container">
+                <div class="members-carousel-track" id="membersCarouselTrack">
+                    <!-- 会员头像将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 信息条 -->
+        <div class="info-banner">
+            <div class="info-content">
+                <div class="info-title">线下同城聚会</div>
+                <div class="info-subtitle">周末见</div>
+            </div>
+            <div class="info-actions">
+                <button class="btn-secondary" onclick="handleActivities()">了解更多</button>
+            </div>
+        </div>
+
+        <!-- 推荐活动 -->
+        <div class="events-section">
+            <div class="section-header">
+                <div class="section-title">推荐活动</div>
+                <div class="section-more" onclick="handleActivities()">查看全部</div>
+            </div>
+            <div class="events-list" id="eventsList">
+                <!-- 活动列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 快速操作 -->
+    </div>
+
+    <!-- 模拟小程序底部TabBar -->
+    <div class="miniprogram-tabbar">
+        <div class="tab-item active" onclick="handleTabClick('home')">
+            <div class="tab-icon">
+                <!-- 简洁的五角星图标（带笑脸） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 五角星外框 -->
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <!-- 笑脸眼睛 -->
+                    <circle cx="10" cy="10.5" r="0.8" fill="currentColor"/>
+                    <circle cx="14" cy="10.5" r="0.8" fill="currentColor"/>
+                    <!-- 笑脸嘴巴 -->
+                    <path d="M10 13.5C10 13.5 11 14.5 12 14.5C13 14.5 14 13.5 14 13.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="tab-text">活动</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('match')">
+            <div class="tab-icon">
+                <!-- 简洁的双人图标 -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 左边的人 -->
+                    <circle cx="9" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M3 21C3 17.134 5.686 14 9 14C12.314 14 15 17.134 15 21" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <!-- 右边的人 -->
+                    <circle cx="15" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M9 21C9 17.134 11.686 14 15 14C18.314 14 21 17.134 21 21" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">相遇</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('publish')">
+            <div class="tab-icon publish-icon">
+                <!-- 圆形底框徽标 -->
+                <div class="publish-badge">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="white"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="tab-text">发布</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('message')">
+            <div class="tab-icon">
+                <!-- 截图3：聊天气泡图标（边框样式） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="8" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="12" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <circle cx="16" cy="10" r="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">消息</div>
+        </div>
+        <div class="tab-item" onclick="handleTabClick('profile')">
+            <div class="tab-icon">
+                <!-- 截图4：用户头像图标（边框样式） -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+            </div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+        });
+        
+        // 额外的页面完全加载检查
+        window.addEventListener('load', function() {
+            // 页面加载完成
+            console.log('页面加载完成');
+        });
+        
+        // 基础JavaScript - 移除调试信息
+        
+        // 模拟小程序数据和API
+        const mockData = {
+            members: [
+                { id: 1, name: '小明', avatarUrl: '' },
+                { id: 2, name: '小红', avatarUrl: '' },
+                { id: 3, name: '小李', avatarUrl: '' },
+                { id: 4, name: '小王', avatarUrl: '' },
+                { id: 5, name: '小张', avatarUrl: '' }
+            ],
+            events: [
+                {
+                    id: 1,
+                    title: '周末户外徒步',
+                    meta: '本周六 14:00',
+                    place: '香山公园',
+                    city: '北京',
+                    capacity: 20,
+                    registered: 15,
+                    registeredByMe: false
+                },
+                {
+                    id: 2,
+                    title: '咖啡品鉴会',
+                    meta: '本周日 15:00',
+                    place: '星巴克旗舰店',
+                    city: '上海',
+                    capacity: 12,
+                    registered: 12,
+                    registeredByMe: true
+                }
+            ]
+        };
+
+        // 立即加入功能
+        function handleJoinClick() {
+            alert('欢迎加入PINYU CLUB！\n\n这是一个高端社交俱乐部小程序的演示版本。\n\n如需完整体验，请在微信开发者工具中打开此项目。');
+        }
+
+        // 轮播功能
+        let currentSlide = 0;
+        let slides, indicators;
+
+        function initCarousel() {
+            slides = document.querySelectorAll('.carousel-slide');
+            indicators = document.querySelectorAll('.indicator');
+            
+            // 从localStorage加载轮播图片
+            loadCarouselImages();
+            
+            // 从localStorage加载轮播文字
+            loadCarouselTexts();
+        }
+
+        function loadCarouselImages() {
+            try {
+                const savedImages = localStorage.getItem('carouselImages');
+                if (savedImages) {
+                    const carouselImages = JSON.parse(savedImages);
+                    
+                    // 如果是第一个轮播，保持原有内容结构，只更新背景
+                    if (carouselImages[0] && slides[0]) {
+                        const firstSlide = slides[0];
+                        const slideContent = firstSlide.querySelector('.slide-content');
+                        if (slideContent) {
+                            slideContent.style.backgroundImage = `url(${carouselImages[0]})`;
+                            slideContent.style.backgroundSize = 'cover';
+                            slideContent.style.backgroundPosition = 'center';
+                        }
+                    }
+                    
+                    // 其他轮播直接设置背景图片
+                    for (let i = 1; i < carouselImages.length && i < slides.length; i++) {
+                        if (carouselImages[i] && slides[i]) {
+                            const slideBg = slides[i].querySelector('.slide-bg');
+                            if (slideBg) {
+                                slideBg.style.backgroundImage = `url(${carouselImages[i]})`;
+                                slideBg.style.backgroundSize = 'cover';
+                                slideBg.style.backgroundPosition = 'center';
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('加载轮播图片失败:', e);
+            }
+        }
+
+        function loadCarouselTexts() {
+            try {
+                const savedTexts = localStorage.getItem('carouselTexts');
+                if (savedTexts) {
+                    const carouselTexts = JSON.parse(savedTexts);
+                    if (carouselTexts[0] && slides[0]) {
+                        const firstSlide = slides[0];
+                        
+                        // 更新品牌信息文字
+                        const brandTitle = firstSlide.querySelector('.brand-title');
+                        const brandSubtitle = firstSlide.querySelector('.brand-subtitle');
+                        const brandDescription = firstSlide.querySelector('.brand-description');
+                        const brandSlogan = firstSlide.querySelector('.brand-slogan');
+                        
+                        if (brandTitle) brandTitle.textContent = carouselTexts[0].title || 'PINYU CLUB';
+                        if (brandSubtitle) brandSubtitle.textContent = carouselTexts[0].subtitle || '高端社交俱乐部小程序';
+                        if (brandDescription) brandDescription.textContent = carouselTexts[0].description || '专为25-65岁高净值人群打造的高质量社交平台';
+                        if (brandSlogan) brandSlogan.textContent = carouselTexts[0].slogan || '同频终相逢，共振即永恒';
+                        
+                        // 更新字体颜色
+                        const fontColor = carouselTexts[0].fontColor || '#ffffff';
+                        [brandTitle, brandSubtitle, brandDescription, brandSlogan].forEach(element => {
+                            if (element) element.style.color = fontColor;
+                        });
+                    }
+                }
+            } catch (e) {
+                console.error('加载轮播文字失败:', e);
+            }
+        }
+
+        function goToSlide(index) {
+            if (slides && indicators) {
+                // 移除当前活动状态
+                slides[currentSlide].classList.remove('active');
+                indicators[currentSlide].classList.remove('active');
+                
+                // 设置新的活动状态
+                currentSlide = index;
+                slides[currentSlide].classList.add('active');
+                indicators[currentSlide].classList.add('active');
+            }
+        }
+
+        // 自动轮播
+        function startAutoCarousel() {
+            setInterval(() => {
+                if (slides && slides.length > 0) {
+                    const nextSlide = (currentSlide + 1) % slides.length;
+                    goToSlide(nextSlide);
+                }
+            }, 5000);
+        }
+
+        // 会员头像轮播初始化
+        function initMembersCarousel() {
+            const membersData = [
+                {
+                    id: 'ryan',
+                    name: 'Ryan',
+                    avatar: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="15" fill="#8B4513"/>
+                        <circle cx="50" cy="70" r="25" fill="#4169E1"/>
+                        <circle cx="42" cy="32" r="2" fill="#000"/>
+                        <circle cx="58" cy="32" r="2" fill="#000"/>
+                        <path d="M45 40 Q50 45 55 40" stroke="#000" stroke-width="1" fill="none"/>
+                    </svg>`
+                },
+                {
+                    id: 'yuki',
+                    name: 'Yuki',
+                    avatar: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="15" fill="#DDA0DD"/>
+                        <circle cx="50" cy="70" r="25" fill="#FF69B4"/>
+                        <circle cx="42" cy="32" r="2" fill="#000"/>
+                        <circle cx="58" cy="32" r="2" fill="#000"/>
+                        <path d="M45 40 Q50 45 55 40" stroke="#000" stroke-width="1" fill="none"/>
+                    </svg>`
+                },
+                {
+                    id: 'victor',
+                    name: 'Victor',
+                    avatar: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="15" fill="#228B22"/>
+                        <circle cx="50" cy="70" r="25" fill="#32CD32"/>
+                        <circle cx="42" cy="32" r="2" fill="#000"/>
+                        <circle cx="58" cy="32" r="2" fill="#000"/>
+                        <path d="M45 40 Q50 45 55 40" stroke="#000" stroke-width="1" fill="none"/>
+                    </svg>`
+                },
+                {
+                    id: 'jack',
+                    name: 'Jack',
+                    avatar: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="15" fill="#FF6347"/>
+                        <circle cx="50" cy="70" r="25" fill="#FF4500"/>
+                        <circle cx="42" cy="32" r="2" fill="#000"/>
+                        <circle cx="58" cy="32" r="2" fill="#000"/>
+                        <path d="M45 40 Q50 45 55 40" stroke="#000" stroke-width="1" fill="none"/>
+                    </svg>`
+                }
+            ];
+            
+            const track = document.getElementById('membersCarouselTrack');
+            if (track) {
+                // 创建双倍数量的头像以实现无缝循环
+                const allMembers = [...membersData, ...membersData];
+                
+                allMembers.forEach(member => {
+                    const avatarElement = document.createElement('div');
+                    avatarElement.className = 'member-avatar';
+                    avatarElement.innerHTML = member.avatar;
+                    avatarElement.title = member.name;
+                    track.appendChild(avatarElement);
+                });
+            }
+        }
+
+        // 初始化页面数据
+        const pageData = {
+            query: '',
+            events: mockData.events,
+            members: mockData.members,
+            unreadCount: 3,
+            brandThemeKey: 'default'
+        };
+
+        // 模拟wx API
+        window.wx = {
+            showToast: function(options) {
+                alert(options.title);
+                if (options.success) options.success();
+            },
+            navigateTo: function(options) {
+                if (options.success) options.success();
+            }
+        };
+
+        // 模拟小程序页面初始化
+        function initializePage() {
+            console.log('🚀 开始初始化页面');
+            
+            // 渲染会员列表
+            renderMembers();
+            
+            // 渲染活动列表
+            renderEvents();
+
+            // 绑定搜索事件
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearchInput);
+            }
+        }
+
+        // 渲染会员列表 - 已删除会员头像区域，此函数不再需要
+        function renderMembers() {
+            // 会员头像区域已删除，此函数不再执行任何操作
+        }
+
+        // 渲染活动列表
+        function renderEvents() {
+            const container = document.getElementById('eventsList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            pageData.events.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'component-event-card';
+                eventElement.innerHTML = `
+                    <div class="event-cover">活动封面</div>
+                    <div class="event-content">
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-meta">${event.meta}</div>
+                        <div class="event-location">${event.place} · ${event.city}</div>
+                        <div class="event-stats">
+                            <div class="event-capacity">${event.registered}/${event.capacity}人</div>
+                            <button class="event-register-btn" onclick="handleEventRegister(${event.id})">
+                                ${event.registeredByMe ? '已报名' : '报名'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(eventElement);
+            });
+        }
+
+
+
+        // 事件处理函数
+        function handleSearchInput(event) {
+            pageData.query = event.target.value;
+        }
+
+        function handleJoinNow() {
+            wx.showToast({ title: '欢迎加入频遇！', icon: 'success' });
+        }
+
+        function handleQuickAction(action) {
+            wx.showToast({ title: `${action}功能`, icon: 'success' });
+        }
+
+        function handleActivities() {
+            // 显示选择弹窗
+            const userChoice = confirm('活动功能正在开发中！\n\n点击"确定"查看干净页面预览\n点击"取消"查看开发提示');
+            
+            if (userChoice) {
+                // 用户选择查看干净页面
+                window.location.href = 'clean-homepage.html';
+            } else {
+                // 显示开发中提示
+                alert('测试功能正在开发中，敬请期待！');
+            }
+        }
+
+        function handleMemberTap(memberId) {
+            wx.navigateTo({ url: `/pages/profile/index?id=${memberId}` });
+        }
+
+        function handleEventRegister(eventId) {
+            const event = pageData.events.find(e => e.id === eventId);
+            if (event) {
+                event.registeredByMe = !event.registeredByMe;
+                if (event.registeredByMe) {
+                    event.registered++;
+                } else {
+                    event.registered--;
+                }
+                renderEvents();
+                
+                wx.showToast({ 
+                    title: event.registeredByMe ? '报名成功' : '取消报名', 
+                    icon: 'success' 
+                });
+            }
+        }
+
+        // 导航栏交互函数
+        function handleNavClick(navType) {
+            // 移除所有导航项的active类
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.remove('active-touch');
+            });
+            
+            // 为当前点击的导航项添加active类
+            const clickedItem = event.target.closest('.nav-item');
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+                
+                // 添加触摸反馈效果
+                clickedItem.classList.add('active-touch');
+                setTimeout(() => {
+                    clickedItem.classList.remove('active-touch');
+                }, 150);
+            }
+            
+            // 根据导航类型执行相应操作
+            switch(navType) {
+                case 'home':
+                    console.log('点击了首页 - 保持在当前页面');
+                    // 保持在当前页面，不进行跳转
+                    break;
+                case 'my':
+                    console.log('导航到我的主页');
+                    window.location.href = 'profile.html';
+                    break;
+                case 'match':
+                    console.log('导航到同频相遇');
+                    window.location.href = 'frequency-match.html';
+                    break;
+                case 'test':
+                    console.log('导航到测测');
+                    // 跳转到干净主页
+                    window.location.href = 'clean-homepage.html';
+                    break;
+                case 'activity':
+                    console.log('导航到活动');
+                    // 跳转到活动页面
+                    window.location.href = 'activity-page.html';
+                    break;
+                case 'community':
+                    console.log('导航到社区');
+                    // 跳转到干净主页
+                    window.location.href = 'clean-homepage.html';
+                    break;
+                case 'member':
+                    console.log('导航到会员中心');
+                    // 跳转到干净主页
+                    window.location.href = 'clean-homepage.html';
+                    break;
+            }
+        }
+
+        // 底部导航处理函数
+        function handleTabClick(tabType) {
+            // 移除所有tab的active类
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.remove('active-touch');
+            });
+            
+            // 为当前点击的tab添加active类
+            const clickedTab = event.target.closest('.tab-item');
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+                
+                // 添加触摸反馈效果
+                clickedTab.classList.add('active-touch');
+                setTimeout(() => {
+                    clickedTab.classList.remove('active-touch');
+                }, 150);
+            }
+            
+            // 根据tab类型执行相应操作
+            switch(tabType) {
+                case 'home':
+                    console.log('点击了活动tab - 保持在当前页面');
+                    break;
+                case 'match':
+                    console.log('点击了相遇tab');
+                    window.location.href = 'frequency-match.html';
+                    break;
+                case 'publish':
+                    console.log('点击了发布tab');
+                    window.location.href = 'social-home.html';
+                    break;
+                case 'message':
+                    console.log('点击了消息tab');
+                    window.location.href = 'messages.html';
+                    break;
+                case 'profile':
+                    console.log('点击了我的tab');
+                    window.location.href = 'profile.html';
+                    break;
+                default:
+                    console.log(`${tabType}功能正在开发中`);
+            }
+        }
+
+        function handleMessageClick() {
+            // 添加触摸反馈效果
+            const clickedItem = event.target.closest('.nav-item');
+            if (clickedItem) {
+                clickedItem.classList.add('active-touch');
+                setTimeout(() => {
+                    clickedItem.classList.remove('active-touch');
+                }, 150);
+            }
+            
+            console.log('打开消息页面');
+            // 跳转到消息页面
+            window.location.href = 'messages.html';
+        }
+
+
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化页面
+            try {
+                initializePage();
+                // 初始化轮播功能
+                initCarousel();
+                // 初始化会员头像轮播
+                initMembersCarousel();
+                // 启动自动轮播
+                startAutoCarousel();
+            } catch (error) {
+                // 静默处理错误
+            }
+        });
+
+    </script>
+</body>
+</html>

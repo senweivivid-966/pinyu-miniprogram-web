@@ -1,0 +1,32 @@
+<!-- components/member-card/index.wxml -->
+<view class="member-card {{cardType}}" bindtap="onCardTap">
+  <view class="card-header">
+    <view class="avatar-container">
+      <image class="avatar" src="{{member.avatar}}" mode="aspectFill"></image>
+      <view wx:if="{{member.online}}" class="online-indicator"></view>
+    </view>
+    <view class="member-info">
+      <view class="member-name">{{member.name}}</view>
+      <view class="member-meta">
+        <text class="age">{{member.age}}岁</text>
+        <text class="location">{{member.location}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{cardType === 'detailed'}}" class="card-body">
+    <view wx:if="{{member.bio}}" class="member-bio">{{member.bio}}</view>
+    <view wx:if="{{member.tags && member.tags.length}}" class="member-tags">
+      <text wx:for="{{member.tags}}" wx:key="*this" class="tag">{{item}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{showActions}}" class="card-actions">
+    <button class="action-btn like-btn" bindtap="onLikeTap">
+      <text class="btn-text">喜欢</text>
+    </button>
+    <button class="action-btn chat-btn" bindtap="onChatTap">
+      <text class="btn-text">聊天</text>
+    </button>
+  </view>
+</view>

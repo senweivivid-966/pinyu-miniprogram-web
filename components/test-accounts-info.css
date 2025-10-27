@@ -1,0 +1,95 @@
+/* 测试账号信息样式 */
+.test-accounts-info {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 20px 30px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.test-accounts-title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.info-icon {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.test-accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.test-account-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+}
+
+.test-account-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.account-label {
+    font-weight: 500;
+    color: #555;
+    min-width: 70px;
+    font-size: 14px;
+}
+
+.account-value {
+    flex: 1;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    color: #667eea;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin: 0 10px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.quick-fill-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.quick-fill-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.quick-fill-btn:active {
+    transform: translateY(0);
+}
+
+/* 输入框填入动画 */
+.form-input {
+    transition: background-color 0.3s ease;
+}

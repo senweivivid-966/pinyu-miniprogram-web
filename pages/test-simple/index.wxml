@@ -1,0 +1,6 @@
+<!--pages/test-simple/index.wxml-->
+<view class="container">
+  <view class="title">{{message}}</view>
+  <view class="subtitle">这是一个简单的测试页面</view>
+  <view class="info">如果您能看到这个页面，说明微信开发者工具运行正常</view>
+</view>

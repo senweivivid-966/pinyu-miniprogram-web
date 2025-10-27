@@ -1,0 +1,233 @@
+/**app.wxss**/
+/* 全局样式 */
+page {
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #1f2937;
+}
+
+/* 主题色彩变量 */
+.theme-default {
+  --primary-color: #FF6B9D;
+  --secondary-color: #EC4899;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --border-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-royal {
+  --primary-color: #8B5CF6;
+  --secondary-color: #7C3AED;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --border-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 容器样式 */
+.container-page {
+  padding: 32rpx;
+  padding-bottom: 160rpx; /* 为底部导航栏留出空间 */
+  min-height: 100vh;
+}
+
+/* 渐变背景 */
+.app-gradient-bg {
+  background: linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%);
+}
+
+/* 卡片样式 */
+.card {
+  background: var(--bg-primary);
+  border-radius: 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.05);
+  border: 2rpx solid var(--border-color);
+  padding: 32rpx;
+  margin-bottom: 32rpx;
+}
+
+/* 按钮样式 */
+.btn {
+  border-radius: 24rpx;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  padding: 24rpx 48rpx;
+}
+
+.btn-primary:hover {
+  background: var(--secondary-color);
+}
+
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  padding: 16rpx 32rpx;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 标签样式 */
+.chip {
+  display: inline-block;
+  padding: 8rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.chip-info {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.chip-success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.chip-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+/* 文本样式 */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-xs {
+  font-size: 24rpx;
+}
+
+.text-sm {
+  font-size: 28rpx;
+}
+
+.text-base {
+  font-size: 32rpx;
+}
+
+.text-lg {
+  font-size: 36rpx;
+}
+
+.text-xl {
+  font-size: 40rpx;
+}
+
+.text-2xl {
+  font-size: 48rpx;
+}
+
+/* 布局工具类 */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.space-y-4 > view + view,
+.space-y-4 > text + text,
+.space-y-4 > button + button,
+.space-y-4 > image + image {
+  margin-top: 32rpx;
+}
+
+.space-y-2 > view + view,
+.space-y-2 > text + text,
+.space-y-2 > button + button,
+.space-y-2 > image + image {
+  margin-top: 16rpx;
+}
+
+/* 滚动样式 - 微信小程序不支持 webkit 伪元素选择器 */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 头像样式 */
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-sm {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.avatar-md {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.avatar-lg {
+  width: 128rpx;
+  height: 128rpx;
+}
+
+/* 阴影样式 */
+.shadow-sm {
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.shadow-md {
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 边框样式 */
+.border {
+  border: 2rpx solid var(--border-color);
+}
+
+.border-t {
+  border-top: 2rpx solid var(--border-color);
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+.rounded-lg {
+  border-radius: 16rpx;
+}
+
+.rounded-xl {
+  border-radius: 24rpx;
+}
+
+.rounded-2xl {
+  border-radius: 32rpx;
+}

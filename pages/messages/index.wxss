@@ -1,0 +1,287 @@
+/* pages/messages/index.wxss */
+.messages-page {
+  height: 100vh;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部导航 */
+.top-nav {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  height: 44px;
+}
+
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+}
+
+.search-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: #f2f2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.search-btn:active {
+  background: #e5e5ea;
+  transform: scale(0.95);
+}
+
+.search-icon {
+  font-size: 16px;
+}
+
+/* 搜索栏 */
+.search-bar {
+  padding: 0 16px 12px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.search-bar.show {
+  max-height: 60px;
+}
+
+.search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 18px;
+  background: #f8f9fa;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  border-color: transparent;
+  background: #fff;
+}
+
+/* 会话列表 */
+.conversation-list {
+  flex: 1;
+  background: #fff;
+}
+
+.conversations {
+  padding: 0;
+}
+
+.conversation-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.conversation-item:active {
+  background: #f8f9fa;
+}
+
+.conversation-item:last-child {
+  border-bottom: none;
+}
+
+/* 用户头像 */
+.user-avatar-container {
+  position: relative;
+  margin-right: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  border: 2px solid #f0f0f0;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #34c759;
+  border: 2px solid #fff;
+  border-radius: 6px;
+}
+
+.unread-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: #ff3b30;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+/* 会话信息 */
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.message-time {
+  font-size: 12px;
+  color: #999;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.last-message {
+  display: flex;
+  align-items: center;
+}
+
+.message-content {
+  font-size: 14px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.message-content.unread {
+  color: #333;
+  font-weight: 500;
+}
+
+/* 右侧箭头 */
+.conversation-arrow {
+  margin-left: 8px;
+  color: #c7c7cc;
+}
+
+.arrow-icon {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e0e0e0;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.empty-btn {
+  padding: 12px 24px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.empty-btn:active {
+  background: #0056cc;
+  transform: scale(0.98);
+}
+
+/* 动画 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

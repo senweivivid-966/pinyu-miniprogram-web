@@ -1,0 +1,95 @@
+<!--pages/messages/index.wxml-->
+<view class="messages-page">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="nav-content">
+      <view class="nav-title">私信</view>
+      <view class="nav-actions">
+        <view class="search-btn" bindtap="toggleSearch">
+          <text class="search-icon">🔍</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 搜索栏 -->
+    <view class="search-bar {{showSearch ? 'show' : ''}}">
+      <input 
+        class="search-input"
+        placeholder="搜索联系人或消息"
+        value="{{searchQuery}}"
+        bindinput="onSearchInput"
+        focus="{{showSearch}}"
+      />
+    </view>
+  </view>
+
+  <!-- 会话列表 -->
+  <scroll-view 
+    class="conversation-list" 
+    scroll-y="true"
+    refresher-enabled="true"
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    <view class="conversations">
+      <view 
+        wx:for="{{conversations}}" 
+        wx:key="id" 
+        class="conversation-item"
+        data-id="{{item.id}}"
+        data-user-id="{{item.userId}}"
+        data-user-name="{{item.userName}}"
+        bindtap="onConversationTap"
+        bindlongpress="onDeleteConversation"
+      >
+        <!-- 用户头像 -->
+        <view class="user-avatar-container">
+          <image 
+            class="user-avatar" 
+            src="{{item.userAvatar}}" 
+            mode="aspectFill"
+          />
+          <view wx:if="{{item.isOnline}}" class="online-indicator"></view>
+          <view wx:if="{{item.unreadCount > 0}}" class="unread-badge">
+            {{item.unreadCount > 99 ? '99+' : item.unreadCount}}
+          </view>
+        </view>
+
+        <!-- 会话信息 -->
+        <view class="conversation-info">
+          <view class="conversation-header">
+            <text class="user-name">{{item.userName}}</text>
+            <text class="message-time">{{item.lastMessageTime}}</text>
+          </view>
+          
+          <view class="last-message">
+            <text class="message-content {{item.unreadCount > 0 ? 'unread' : ''}}">
+              {{item.messageType === 'image' ? '[图片]' : item.lastMessage}}
+            </text>
+          </view>
+        </view>
+
+        <!-- 右侧箭头 -->
+        <view class="conversation-arrow">
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{conversations.length === 0 && !loading}}">
+      <image class="empty-icon" src="/assets/images/empty-messages.svg" />
+      <text class="empty-title">暂无消息</text>
+      <text class="empty-subtitle">开始与其他会员聊天吧</text>
+      <button class="empty-btn" bindtap="goToMeet">去相遇</button>
+    </view>
+  </scroll-view>
+
+  <!-- 底部导航 -->
+  <bottom-navbar current-tab="message" bind:navchange="onNavChange" />
+</view>

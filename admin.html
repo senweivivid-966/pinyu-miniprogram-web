@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运营管理后台 - PINYU CLUB</title>
+    <link rel="stylesheet" href="app.css">
+    <style>
+        /* 移动端适配 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        /* 容器样式 */
+        .page-container {
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        /* 头部导航 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 16px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            padding: 20px 16px;
+        }
+        
+        /* 功能卡片 */
+        .feature-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-icon {
+            font-size: 20px;
+        }
+        
+        .card-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        /* 轮播管理区域 */
+        .carousel-management {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #fafafa;
+        }
+        
+        .upload-area {
+            margin-bottom: 20px;
+        }
+        
+        .upload-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .upload-btn:active {
+            transform: translateY(0);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        /* 当前轮播图片展示 */
+        .current-carousel {
+            margin-top: 20px;
+        }
+        
+        .carousel-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .carousel-item {
+            position: relative;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-item-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255,0,0,0.8);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 操作按钮区域 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .save-btn {
+            background: #34c759;
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background: #30b955;
+        }
+        
+        .preview-btn {
+            background: #007aff;
+            color: white;
+        }
+        
+        .preview-btn:hover {
+            background: #0056cc;
+        }
+        
+        /* 状态提示 */
+        .status-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* 响应式设计 */
+        @media screen and (max-width: 414px) {
+            .page-container {
+                max-width: 100%;
+                box-shadow: none;
+            }
+            
+            .upload-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* 轮播文字管理样式 */
+        .carousel-text-management {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .text-slides-container {
+            margin-bottom: 20px;
+        }
+        
+        .text-slide-editor {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .slide-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .text-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .text-input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+        
+        .text-textarea {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            min-height: 60px;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        .text-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+        
+        /* 颜色选择器样式 */
+        .color-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        
+        .color-option {
+            width: 60px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .color-option:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .color-option.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        .color-label {
+            font-size: 10px;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            color: white;
+        }
+        
+        .color-option[data-color="#000000"] .color-label,
+        .color-option[data-color="#4a4a4a"] .color-label {
+            color: white;
+        }
+        
+        .color-option[data-color="#9e9e9e"] .color-label,
+        .color-option[data-color="#f5f5dc"] .color-label,
+        .color-option[data-color="#ffffff"] .color-label {
+            color: #333;
+            text-shadow: none;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 167, 38, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 头部导航 -->
+        <!-- 统一顶部导航栏 -->
+        <div id="unified-navbar-container"></div>
+        
+        <!-- 主要内容 -->
+        <div class="main-content">
+            <!-- 轮播图管理 -->
+            <div class="feature-card">
+                <h2 class="card-title">
+                    <span class="card-icon">🎠</span>
+                    轮播图管理
+                </h2>
+                <p class="card-description">
+                    管理首页轮播图片，支持本地上传和手机相册选择。建议图片尺寸为 16:9，文件大小不超过 2MB。
+                </p>
+                
+                <div class="carousel-management">
+                    <div class="upload-area">
+                        <div class="upload-buttons">
+                            <button class="upload-btn" onclick="selectFromLocal()">
+                                <span>📁</span>
+                                本地上传
+                            </button>
+                            <button class="upload-btn" onclick="selectFromCamera()">
+                                <span>📷</span>
+                                拍照上传
+                            </button>
+                            <button class="upload-btn" onclick="selectFromAlbum()">
+                                <span>🖼️</span>
+                                相册选择
+                            </button>
+                        </div>
+                        
+                        <!-- 隐藏的文件输入 -->
+                        <input type="file" id="localFileInput" class="file-input" accept="image/*" multiple onchange="handleFileSelect(event)">
+                        <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+                        <input type="file" id="albumInput" class="file-input" accept="image/*" multiple onchange="handleFileSelect(event)">
+                    </div>
+                    
+                    <!-- 当前轮播图片 -->
+                    <div class="current-carousel">
+                        <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #333;">当前轮播图片</h3>
+                        <div class="carousel-list" id="carouselList">
+                            <div class="carousel-item">
+                                <div class="carousel-item-placeholder">轮播图 1<br>点击上传</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-item-placeholder">轮播图 2<br>点击上传</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-item-placeholder">轮播图 3<br>点击上传</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-item-placeholder">轮播图 4<br>点击上传</div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-item-placeholder">轮播图 5<br>点击上传</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="action-buttons">
+                        <button class="action-btn save-btn" onclick="saveCarouselImages()">
+                            保存更改
+                        </button>
+                        <button class="action-btn preview-btn" onclick="previewCarousel()">
+                            预览效果
+                        </button>
+                    </div>
+                    
+                    <!-- 状态提示 -->
+                    <div id="statusMessage" class="status-message" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <!-- 轮播文字管理 -->
+            <div class="feature-card">
+                <h2 class="card-title">
+                    <span class="card-icon">📝</span>
+                    轮播文字管理
+                </h2>
+                <p class="card-description">
+                    管理轮播页面1的文字内容，包括标题、描述和标语。其他轮播页面将显示固定内容。
+                </p>
+                
+                <div class="carousel-text-management">
+                    <div class="text-slides-container" id="textSlidesContainer">
+                        <!-- 轮播页面1 -->
+                        <div class="text-slide-editor" data-slide="0">
+                            <h4 class="slide-title">轮播页面 1 - 可编辑</h4>
+                            <div class="text-form">
+                                <div class="form-group">
+                                    <label>品牌标题:</label>
+                                    <input type="text" class="text-input" id="title_0" placeholder="例如: PINYU CLUB" value="PINYU CLUB">
+                                </div>
+                                <div class="form-group">
+                                    <label>副标题:</label>
+                                    <input type="text" class="text-input" id="subtitle_0" placeholder="例如: 高端社交俱乐部小程序" value="高端社交俱乐部小程序">
+                                </div>
+                                <div class="form-group">
+                                    <label>详细描述:</label>
+                                    <textarea class="text-textarea" id="description_0" placeholder="例如: 专为25-65岁高净值人群打造的高质量社交平台">专为25-65岁高净值人群打造的高质量社交平台</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>品牌标语:</label>
+                                    <input type="text" class="text-input" id="slogan_0" placeholder="例如: 同频终相逢，共振即永恒" value="同频终相逢，共振即永恒">
+                                </div>
+                                <div class="form-group">
+                                    <label>字体颜色:</label>
+                                    <div class="color-selector" id="fontColorSelector">
+                                        <div class="color-option" data-color="#000000" style="background-color: #000000;" title="黑色">
+                                            <span class="color-label">黑色</span>
+                                        </div>
+                                        <div class="color-option" data-color="#4a4a4a" style="background-color: #4a4a4a;" title="深灰色">
+                                            <span class="color-label">深灰</span>
+                                        </div>
+                                        <div class="color-option" data-color="#9e9e9e" style="background-color: #9e9e9e;" title="浅灰色">
+                                            <span class="color-label">浅灰</span>
+                                        </div>
+                                        <div class="color-option" data-color="#f5f5dc" style="background-color: #f5f5dc;" title="米白色">
+                                            <span class="color-label">米白</span>
+                                        </div>
+                                        <div class="color-option selected" data-color="#ffffff" style="background-color: #ffffff;" title="白色">
+                                            <span class="color-label">白色</span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="fontColor_0" value="#ffffff">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 其他轮播页面说明 -->
+                        <div class="text-slide-editor" style="background: #f8f9fa; border: 2px dashed #dee2e6;">
+                            <h4 class="slide-title" style="color: #6c757d;">轮播页面 2-5 - 固定内容</h4>
+                            <p style="color: #6c757d; margin: 10px 0; font-size: 14px;">
+                                其他轮播页面将显示预设的固定内容，不支持编辑。如需修改，请联系开发人员。
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 文字管理操作按钮 -->
+                    <div class="action-buttons">
+                        <button class="action-btn save-btn" onclick="saveCarouselTexts()">
+                            保存文字内容
+                        </button>
+                        <button class="action-btn preview-btn" onclick="previewCarouselTexts()">
+                            预览文字效果
+                        </button>
+                        <button class="action-btn reset-btn" onclick="resetCarouselTexts()">
+                            重置为默认
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 其他管理功能 -->
+            <div class="feature-card">
+                <h2 class="card-title">
+                    <span class="card-icon">📊</span>
+                    数据统计
+                </h2>
+                <p class="card-description">
+                    查看用户活跃度、轮播图点击率等运营数据。
+                </p>
+                <button class="action-btn preview-btn" onclick="viewStatistics()">
+                    查看统计
+                </button>
+            </div>
+            
+            <div class="feature-card">
+                <h2 class="card-title">
+                    <span class="card-icon">👥</span>
+                    用户管理
+                </h2>
+                <p class="card-description">
+                    管理用户信息、审核用户内容、处理举报等。
+                </p>
+                <button class="action-btn preview-btn" onclick="manageUsers()">
+                    用户管理
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 轮播图片数据
+        let carouselImages = [null, null, null, null, null];
+        
+        // 轮播文字数据 - 只保留轮播1的可编辑数据
+        let carouselTexts = [
+            {
+                title: 'PINYU CLUB',
+                subtitle: '高端社交俱乐部小程序',
+                description: '专为25-65岁高净值人群打造的高质量社交平台',
+                slogan: '同频终相逢，共振即永恒'
+            }
+        ];
+        
+        // 返回首页
+        function goBack() {
+            window.location.href = 'home-main-page.html';
+        }
+        
+        // 本地文件上传
+        function selectFromLocal() {
+            document.getElementById('localFileInput').click();
+        }
+        
+        // 拍照上传
+        function selectFromCamera() {
+            document.getElementById('cameraInput').click();
+        }
+        
+        // 相册选择
+        function selectFromAlbum() {
+            document.getElementById('albumInput').click();
+        }
+        
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+            
+            // 处理多个文件
+            for (let i = 0; i < Math.min(files.length, 5); i++) {
+                const file = files[i];
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    showStatus('请选择图片文件', 'error');
+                    continue;
+                }
+                
+                // 检查文件大小 (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showStatus('图片文件不能超过 2MB', 'error');
+                    continue;
+                }
+                
+                // 找到第一个空位置
+                const emptyIndex = carouselImages.findIndex(img => img === null);
+                if (emptyIndex !== -1) {
+                    // 读取文件并显示预览
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        carouselImages[emptyIndex] = {
+                            file: file,
+                            url: e.target.result,
+                            name: file.name
+                        };
+                        updateCarouselDisplay();
+                        showStatus(`已添加图片: ${file.name}`, 'success');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    showStatus('最多只能上传 5 张轮播图片', 'error');
+                    break;
+                }
+            }
+            
+            // 清空input值，允许重复选择同一文件
+            event.target.value = '';
+        }
+        
+        // 更新轮播图片显示
+        function updateCarouselDisplay() {
+            const carouselList = document.getElementById('carouselList');
+            carouselList.innerHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                const item = document.createElement('div');
+                item.className = 'carousel-item';
+                
+                if (carouselImages[i]) {
+                    item.innerHTML = `
+                        <img src="${carouselImages[i].url}" alt="轮播图 ${i + 1}">
+                        <button class="delete-btn" onclick="removeCarouselImage(${i})">×</button>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <div class="carousel-item-placeholder" onclick="selectImageForSlot(${i})">
+                            轮播图 ${i + 1}<br>点击上传
+                        `;
+                }
+                
+                carouselList.appendChild(item);
+            }
+        }
+        
+        // 为特定位置选择图片
+        function selectImageForSlot(index) {
+            // 临时存储目标索引
+            window.targetSlotIndex = index;
+            selectFromLocal();
+        }
+        
+        // 删除轮播图片
+        function removeCarouselImage(index) {
+            carouselImages[index] = null;
+            updateCarouselDisplay();
+            showStatus(`已删除轮播图 ${index + 1}`, 'info');
+        }
+        
+        // 保存轮播图片
+        function saveCarouselImages() {
+            const validImages = carouselImages.filter(img => img !== null);
+            
+            if (validImages.length === 0) {
+                showStatus('请至少上传一张轮播图片', 'error');
+                return;
+            }
+            
+            // 模拟保存过程
+            showStatus('正在保存轮播图片...', 'info');
+            
+            setTimeout(() => {
+                // 这里应该是实际的上传逻辑
+                // 可以发送到服务器或保存到本地存储
+                localStorage.setItem('carouselImages', JSON.stringify(carouselImages.map(img => img ? img.url : null)));
+                showStatus(`成功保存 ${validImages.length} 张轮播图片`, 'success');
+            }, 1500);
+        }
+        
+        // 预览轮播效果
+        function previewCarousel() {
+            // 保存当前图片到本地存储
+            localStorage.setItem('carouselImages', JSON.stringify(carouselImages.map(img => img ? img.url : null)));
+            
+            // 跳转到首页预览
+            window.location.href = 'home-main-page.html';
+        }
+        
+        // 显示状态消息
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = `status-message status-${type}`;
+            statusElement.style.display = 'block';
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 其他功能（占位）
+        function viewStatistics() {
+            showStatus('数据统计功能开发中...', 'info');
+        }
+        
+        function manageUsers() {
+            showStatus('用户管理功能开发中...', 'info');
+        }
+        
+        // 轮播文字管理功能
+        function saveCarouselTexts() {
+            // 只收集轮播1的文字输入
+            carouselTexts[0] = {
+                title: document.getElementById('title_0').value,
+                subtitle: document.getElementById('subtitle_0').value,
+                description: document.getElementById('description_0').value,
+                slogan: document.getElementById('slogan_0').value,
+                fontColor: document.getElementById('fontColor_0').value
+            };
+            
+            // 保存到本地存储
+            localStorage.setItem('carouselTexts', JSON.stringify(carouselTexts));
+            
+            showStatus('轮播1文字内容已保存！', 'success');
+        }
+        
+        function previewCarouselTexts() {
+            // 先保存当前编辑的内容
+            saveCarouselTexts();
+            
+            // 打开预览页面
+            window.open('home-main-page.html', '_blank');
+            showStatus('已打开预览页面，请查看轮播文字效果', 'info');
+        }
+        
+        function resetCarouselTexts() {
+            if (confirm('确定要重置轮播1为默认文字内容吗？')) {
+                // 重置为默认值
+                carouselTexts = [
+                    {
+                        title: 'PINYU CLUB',
+                        subtitle: '高端社交俱乐部小程序',
+                        description: '专为25-65岁高净值人群打造的高质量社交平台',
+                        slogan: '同频终相逢，共振即永恒',
+                        fontColor: '#ffffff'
+                    }
+                ];
+                
+                // 更新表单显示
+                loadCarouselTexts();
+                
+                // 保存到本地存储
+                localStorage.setItem('carouselTexts', JSON.stringify(carouselTexts));
+                
+                showStatus('已重置为默认文字内容', 'success');
+            }
+        }
+        
+        function loadCarouselTexts() {
+            // 从本地存储加载文字内容
+            const savedTexts = localStorage.getItem('carouselTexts');
+            if (savedTexts) {
+                try {
+                    carouselTexts = JSON.parse(savedTexts);
+                } catch (e) {
+                    console.error('加载轮播文字失败:', e);
+                }
+            }
+            
+            // 只更新轮播1的表单显示
+            if (carouselTexts[0]) {
+                document.getElementById('title_0').value = carouselTexts[0].title || '';
+                document.getElementById('subtitle_0').value = carouselTexts[0].subtitle || '';
+                document.getElementById('description_0').value = carouselTexts[0].description || '';
+                document.getElementById('slogan_0').value = carouselTexts[0].slogan || '';
+                
+                // 更新字体颜色选择器
+                const fontColor = carouselTexts[0].fontColor || '#ffffff';
+                document.getElementById('fontColor_0').value = fontColor;
+                updateColorSelector(fontColor);
+            }
+        }
+        
+        // 颜色选择器交互功能
+        function updateColorSelector(selectedColor) {
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.getAttribute('data-color') === selectedColor) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+        
+        function initColorSelector() {
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const selectedColor = this.getAttribute('data-color');
+                    document.getElementById('fontColor_0').value = selectedColor;
+                    updateColorSelector(selectedColor);
+                });
+            });
+        }
+        
+        // 加载统一导航栏
+        function loadUnifiedNavbar() {
+            fetch('components/unified-navbar.html')
+                .then(response => response.text())
+                .then(html => {
+                    const container = document.getElementById('unified-navbar-container');
+                    if (container) container.innerHTML = html;
+                })
+                .catch(error => { console.error('加载统一导航栏失败:', error); });
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUnifiedNavbar();
+            // 从本地存储加载已保存的轮播图片
+            const savedImages = localStorage.getItem('carouselImages');
+            if (savedImages) {
+                try {
+                    const imageUrls = JSON.parse(savedImages);
+                    for (let i = 0; i < imageUrls.length; i++) {
+                        if (imageUrls[i]) {
+                            carouselImages[i] = {
+                                url: imageUrls[i],
+                                name: `轮播图 ${i + 1}`,
+                                file: null // 已保存的图片没有原始文件对象
+                            };
+                        }
+                    }
+                    updateCarouselDisplay();
+                } catch (e) {
+                    console.error('加载轮播图片失败:', e);
+                }
+            } else {
+                updateCarouselDisplay();
+            }
+            
+            // 加载轮播文字内容
+            loadCarouselTexts();
+            
+            // 初始化颜色选择器
+            initColorSelector();
+        });
+    </script>
+    
+    <!-- 统一导航栏容器 -->
+    <div id="unified-navbar-container"></div>
+    
+    <!-- 加载统一导航栏 -->
+    <script src="components/navbar-loader.js"></script>
+</body>
+</html>

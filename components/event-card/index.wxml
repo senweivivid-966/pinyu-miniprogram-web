@@ -1,0 +1,153 @@
+<view class="event-card">
+  <view class="card-content">
+    <!-- 封面图片 -->
+    <view class="image-container">
+      <block wx:if="{{coverUrl && !imgError}}">
+        <view wx:if="{{imgLoading}}" class="image-placeholder loading">
+          <view class="loading-animation"></view>
+        </view>
+        <image 
+          class="cover-image {{imgLoading ? 'loading' : ''}}"
+          src="{{coverUrl}}"
+          mode="aspectFill"
+          bindload="onImageLoad"
+          binderror="onImageError"
+          lazy-load="{{true}}"
+        />
+      </block>
+      <view wx:else class="image-placeholder">
+        <text wx:if="{{coverUrl}}" class="error-text">加载失败</text>
+        <button wx:if="{{coverUrl}}" class="retry-btn" bindtap="retryImage">重试</button>
+      </view>
+    </view>
+
+    <!-- 内容区域 -->
+    <view class="content-area">
+      <!-- 标题 -->
+      <view class="title">
+        <rich-text nodes="{{highlightText(title, highlightQuery)}}"></rich-text>
+      </view>
+      
+      <!-- 描述 -->
+      <view class="meta">
+        <rich-text nodes="{{highlightText(meta, highlightQuery)}}"></rich-text>
+      </view>
+      
+      <!-- 地点信息 -->
+      <view wx:if="{{locationText}}" class="location">
+        <rich-text nodes="{{highlightText(locationText, highlightQuery)}}"></rich-text>
+      </view>
+
+      <!-- 状态标签 -->
+      <view class="status-tags">
+        <view wx:if="{{registeredByMe}}" class="tag registered">已报名</view>
+        <view wx:if="{{waitlistedByMe}}" class="tag waitlisted">候补中</view>
+        <view wx:if="{{waitlistPosition >= 0}}" class="tag position">
+          我的候补位置：第 {{waitlistPosition + 1}} 位
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <!-- 报名按钮 -->
+        <button 
+          class="btn primary {{registeredByMe || remaining <= 0 ? 'disabled' : ''}}"
+          disabled="{{registeredByMe || remaining <= 0}}"
+          bindtap="onRegisterTap"
+        >
+          {{registeredByMe ? '已报名' : (remaining > 0 ? '报名' : '名额已满')}}
+        </button>
+
+        <!-- 详情按钮 -->
+        <button class="btn secondary" bindtap="onDetailTap">详情</button>
+
+        <!-- 取消报名按钮 -->
+        <button 
+          wx:if="{{registeredByMe}}"
+          class="btn secondary"
+          disabled="{{loading.cancelReg}}"
+          bindtap="onCancelRegister"
+        >
+          {{loading.cancelReg ? '取消中…' : '取消报名'}}
+        </button>
+
+        <!-- 取消候补按钮 -->
+        <button 
+          wx:if="{{waitlistedByMe}}"
+          class="btn secondary"
+          disabled="{{loading.cancelWait}}"
+          bindtap="onCancelWaitlist"
+        >
+          {{loading.cancelWait ? '取消中…' : '取消候补'}}
+        </button>
+
+        <!-- 加入候补按钮 -->
+        <button 
+          wx:if="{{remaining <= 0 && !registeredByMe && !waitlistedByMe}}"
+          class="btn secondary"
+          disabled="{{loading.joinWait}}"
+          bindtap="onJoinWaitlist"
+        >
+          {{loading.joinWait ? '加入中…' : '加入候补'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 报名弹窗 -->
+  <view wx:if="{{showModal}}" class="modal-overlay" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">报名信息</text>
+        <button class="close-btn" bindtap="onCloseModal">×</button>
+      </view>
+      
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="label">姓名</text>
+          <input 
+            class="input"
+            placeholder="请输入姓名"
+            value="{{formData.name}}"
+            data-field="name"
+            bindinput="onFormInput"
+          />
+        </view>
+        
+        <view class="form-item">
+          <text class="label">手机号</text>
+          <input 
+            class="input"
+            placeholder="请输入手机号"
+            type="number"
+            value="{{formData.phone}}"
+            data-field="phone"
+            bindinput="onFormInput"
+          />
+        </view>
+        
+        <view class="form-item">
+          <text class="label">备注</text>
+          <textarea 
+            class="textarea"
+            placeholder="请输入备注（可选）"
+            value="{{formData.remark}}"
+            data-field="remark"
+            bindinput="onFormInput"
+          />
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button 
+          class="btn primary"
+          disabled="{{loading.register}}"
+          bindtap="onSubmitRegister"
+        >
+          {{loading.register ? '提交中…' : '提交报名'}}
+        </button>
+        <button class="btn secondary" bindtap="onCloseModal">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

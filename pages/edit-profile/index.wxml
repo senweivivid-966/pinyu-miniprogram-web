@@ -1,0 +1,239 @@
+<!--pages/edit-profile/index.wxml-->
+<view class="edit-profile-page">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="nav-content">
+      <view class="nav-left" bindtap="onBack">
+        <text class="back-icon">‹</text>
+        <text class="back-text">返回</text>
+      </view>
+      <view class="nav-title">编辑资料</view>
+      <view class="nav-right">
+        <button 
+          class="save-btn {{saving ? 'saving' : ''}}" 
+          bindtap="onSave"
+          disabled="{{saving}}"
+        >
+          {{saving ? '保存中...' : '保存'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 表单内容 -->
+  <scroll-view class="form-container" scroll-y>
+    <!-- 头像部分 -->
+    <view class="form-section">
+      <view class="section-title">头像</view>
+      <view class="avatar-section" bindtap="onAvatarTap">
+        <image class="avatar-preview" src="{{userInfo.avatar}}" mode="aspectFill" />
+        <view class="avatar-edit">
+          <text class="edit-icon">📷</text>
+          <text class="edit-text">点击更换</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <!-- 姓名 -->
+      <view class="form-item">
+        <view class="item-label">姓名 *</view>
+        <input 
+          class="item-input" 
+          placeholder="请输入姓名"
+          value="{{userInfo.name}}"
+          data-field="name"
+          bindinput="onInputChange"
+          maxlength="20"
+        />
+      </view>
+
+      <!-- 年龄 -->
+      <view class="form-item">
+        <view class="item-label">年龄</view>
+        <picker 
+          mode="selector" 
+          range="{{[18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]}}"
+          value="{{userInfo.age - 18}}"
+          bindchange="onAgeChange"
+        >
+          <view class="picker-value">{{userInfo.age}}岁</view>
+        </picker>
+      </view>
+
+      <!-- 性别 -->
+      <view class="form-item">
+        <view class="item-label">性别</view>
+        <picker 
+          mode="selector" 
+          range="{{genderOptions}}"
+          range-key="label"
+          value="{{genderSelectedIndex}}"
+          bindchange="onGenderChange"
+        >
+          <view class="picker-value">
+            {{genderSelectedLabel}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 城市 -->
+      <view class="form-item">
+        <view class="item-label">所在城市</view>
+        <picker 
+          mode="selector" 
+          range="{{cityList}}"
+          value="{{cityList.indexOf(userInfo.city)}}"
+          bindchange="onCityChange"
+        >
+          <view class="picker-value">{{userInfo.city}}</view>
+        </picker>
+      </view>
+
+      <!-- 身高 -->
+      <view class="form-item">
+        <view class="item-label">身高</view>
+        <picker 
+          mode="selector" 
+          range="{{[150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190]}}"
+          value="{{userInfo.height - 150}}"
+          bindchange="onHeightChange"
+        >
+          <view class="picker-value">{{userInfo.height}}cm</view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 职业信息 -->
+    <view class="form-section">
+      <view class="section-title">职业信息</view>
+      
+      <!-- 职业 -->
+      <view class="form-item">
+        <view class="item-label">职业</view>
+        <input 
+          class="item-input" 
+          placeholder="请输入职业"
+          value="{{userInfo.occupation}}"
+          data-field="occupation"
+          bindinput="onInputChange"
+          maxlength="30"
+        />
+      </view>
+
+      <!-- 公司 -->
+      <view class="form-item">
+        <view class="item-label">公司</view>
+        <input 
+          class="item-input" 
+          placeholder="请输入公司名称"
+          value="{{userInfo.company}}"
+          data-field="company"
+          bindinput="onInputChange"
+          maxlength="50"
+        />
+      </view>
+
+      <!-- 学历 -->
+      <view class="form-item">
+        <view class="item-label">学历</view>
+        <picker 
+          mode="selector" 
+          range="{{educationOptions}}"
+          range-key="label"
+          value="{{educationOptions.findIndex(item => item.value === userInfo.education)}}"
+          bindchange="onEducationChange"
+        >
+          <view class="picker-value">
+            {{educationOptions.find(item => item.value === userInfo.education).label}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 收入 -->
+      <view class="form-item">
+        <view class="item-label">收入</view>
+        <picker 
+          mode="selector" 
+          range="{{incomeOptions}}"
+          range-key="label"
+          value="{{incomeOptions.findIndex(item => item.value === userInfo.income)}}"
+          bindchange="onIncomeChange"
+        >
+          <view class="picker-value">
+            {{incomeOptions.find(item => item.value === userInfo.income).label}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 生活习惯 -->
+    <view class="form-section">
+      <view class="section-title">生活习惯</view>
+      
+      <!-- 吸烟 -->
+      <view class="form-item">
+        <view class="item-label">吸烟</view>
+        <picker 
+          mode="selector" 
+          range="{{smokingOptions}}"
+          range-key="label"
+          value="{{smokingOptions.findIndex(item => item.value === userInfo.smoking)}}"
+          bindchange="onSmokingChange"
+        >
+          <view class="picker-value">
+            {{smokingOptions.find(item => item.value === userInfo.smoking).label}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 饮酒 -->
+      <view class="form-item">
+        <view class="item-label">饮酒</view>
+        <picker 
+          mode="selector" 
+          range="{{drinkingOptions}}"
+          range-key="label"
+          value="{{drinkingOptions.findIndex(item => item.value === userInfo.drinking)}}"
+          bindchange="onDrinkingChange"
+        >
+          <view class="picker-value">
+            {{drinkingOptions.find(item => item.value === userInfo.drinking).label}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="form-section">
+      <view class="section-title">个人简介 *</view>
+      <view class="form-item textarea-item">
+        <textarea 
+          class="item-textarea" 
+          placeholder="介绍一下自己，让别人更了解你..."
+          value="{{userInfo.bio}}"
+          data-field="bio"
+          bindinput="onInputChange"
+          maxlength="200"
+          show-confirm-bar="{{false}}"
+          auto-height
+        />
+        <view class="char-count">{{userInfo.bio.length}}/200</view>
+      </view>
+    </view>
+
+    <!-- 底部间距 -->
+    <view class="bottom-spacing"></view>
+  </scroll-view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-overlay">
+    <view class="loading-container">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+</view>

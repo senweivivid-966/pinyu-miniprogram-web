@@ -1,0 +1,477 @@
+/* 注册页面样式 */
+
+/* 注册容器 */
+.register-container {
+    min-height: 100vh;
+    padding-bottom: 30px;
+}
+
+/* 头部导航 */
+.header {
+    display: flex;
+    align-items: center;
+    padding: 50px 20px 20px;
+    position: relative;
+}
+
+.back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.back-icon {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.header-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* 注册表单 */
+.register-form {
+    background: rgba(255,255,255,0.95);
+    margin: 20px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* 错误信息 */
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #c33;
+    font-size: 14px;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* 步骤标题 */
+.step-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 表单组 */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input {
+    width: 100%;
+    height: 50px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 0 15px 0 45px;
+    font-size: 16px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #007AFF;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.form-input.error {
+    border-color: #ff3b30;
+    background: #fff5f5;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    font-size: 18px;
+    color: #999;
+    z-index: 1;
+}
+
+/* 验证码按钮 */
+.verify-btn {
+    position: absolute;
+    right: 8px;
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.verify-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.verify-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 密码切换按钮 */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #007AFF;
+}
+
+/* 密码强度指示器 */
+.password-strength {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.password-strength.weak {
+    color: #ff3b30;
+    background: rgba(255, 59, 48, 0.1);
+}
+
+.password-strength.medium {
+    color: #ff9500;
+    background: rgba(255, 149, 0, 0.1);
+}
+
+.password-strength.strong {
+    color: #34c759;
+    background: rgba(52, 199, 89, 0.1);
+}
+
+/* 性别选择 */
+.gender-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.gender-option:hover {
+    border-color: #007AFF;
+    background: rgba(0, 122, 255, 0.05);
+}
+
+.gender-option input[type="radio"] {
+    display: none;
+}
+
+.gender-option input[type="radio"]:checked + .gender-text {
+    color: #007AFF;
+}
+
+.gender-option:has(input[type="radio"]:checked) {
+    border-color: #007AFF;
+    background: rgba(0, 122, 255, 0.1);
+}
+
+.gender-text {
+    font-size: 14px;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+/* 按钮样式 */
+.next-btn, .register-btn {
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(135deg, #007AFF, #5856D6);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.next-btn:hover, .register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+}
+
+.next-btn:disabled, .register-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.prev-btn {
+    background: transparent;
+    color: #007AFF;
+    border: 2px solid #007AFF;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.prev-btn:hover {
+    background: #007AFF;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* 表单操作区域 */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.form-actions .prev-btn {
+    flex: 1;
+}
+
+.form-actions .register-btn {
+    flex: 2;
+}
+
+/* 加载状态 */
+.btn-loading {
+    display: none;
+}
+
+.btn-text {
+    display: inline;
+}
+
+/* 用户协议 */
+.agreement {
+    margin: 30px 0 20px;
+    text-align: center;
+}
+
+.agreement-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.agreement-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.agreement-checkbox input[type="checkbox"]:checked + .checkmark {
+    background: #007AFF;
+    border-color: #007AFF;
+}
+
+.agreement-checkbox input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.agreement-link {
+    color: #007AFF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.agreement-link:hover {
+    text-decoration: underline;
+}
+
+/* 登录链接 */
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.login-link a {
+    color: #007AFF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .register-form {
+        margin: 10px;
+        padding: 20px;
+    }
+    
+    .gender-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .prev-btn,
+    .form-actions .register-btn {
+        flex: none;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-step {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.register-form {
+    animation: slideInLeft 0.6s ease-out 0.2s both;
+}
+
+/* 加载状态 */
+.register-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.register-btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

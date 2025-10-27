@@ -1,0 +1,108 @@
+<!--pages/frequency-match/index.wxml-->
+<view class="frequency-match-page">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="nav-title">相遇</view>
+    <view class="nav-subtitle">发现有趣的人</view>
+  </view>
+
+  <!-- 会员卡片列表 -->
+  <scroll-view 
+    class="member-list" 
+    scroll-y="true"
+    bindscrolltolower="onReachBottom"
+    refresher-enabled="true"
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    <view class="member-cards">
+      <view 
+        wx:for="{{members}}" 
+        wx:key="id" 
+        class="member-card"
+        bindtap="onMemberTap"
+        data-id="{{item.id}}"
+      >
+        <!-- 会员头像和基本信息 -->
+        <view class="member-header">
+          <image class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+          <view class="online-indicator" wx:if="{{item.isOnline}}"></view>
+        </view>
+
+        <view class="member-info">
+          <view class="member-name-age">
+            <text class="member-name">{{item.name}}</text>
+            <text class="member-age">{{item.age}}岁</text>
+          </view>
+          
+          <view class="member-location">
+            <text class="location-icon">📍</text>
+            <text class="location-text">{{item.location}} · {{item.distance}}km</text>
+          </view>
+
+          <view class="member-bio">{{item.bio}}</view>
+
+          <!-- 兴趣标签 -->
+          <view class="interests">
+            <text 
+              wx:for="{{item.interests}}" 
+              wx:key="*this" 
+              class="interest-tag"
+            >
+              {{item}}
+            </text>
+          </view>
+
+          <!-- 匹配度 -->
+          <view class="match-score">
+            <text class="score-label">匹配度</text>
+            <view class="score-bar">
+              <view class="score-fill" style="width: {{item.matchScore}}%"></view>
+            </view>
+            <text class="score-text">{{item.matchScore}}%</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="member-actions">
+          <view 
+            class="action-btn skip-btn"
+            catchtap="onSkip"
+            data-id="{{item.id}}"
+          >
+            <text class="action-icon">✕</text>
+          </view>
+          
+          <view 
+            class="action-btn like-btn {{item.isLiked ? 'liked' : ''}}"
+            catchtap="onLike"
+            data-id="{{item.id}}"
+          >
+            <text class="action-icon">{{item.isLiked ? '💖' : '💗'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 没有更多数据 -->
+    <view class="no-more" wx:if="{{!hasMore && members.length > 0}}">
+      <text>没有更多会员了</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{members.length === 0 && !loading}}">
+      <image class="empty-icon" src="/assets/images/empty-match.svg" />
+      <text class="empty-title">暂无推荐</text>
+      <text class="empty-subtitle">完善你的资料，获得更多匹配机会</text>
+      <button class="empty-btn" bindtap="goToProfile">完善资料</button>
+    </view>
+  </scroll-view>
+
+  <!-- 底部导航 -->
+  <bottom-navbar current-tab="meet" bind:navchange="onNavChange" />
+</view>

@@ -1,0 +1,25 @@
+/* pages/publish/index.wxss */
+.publish-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 20px;
+}
+
+.publish-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.publish-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.publish-subtitle {
+  font-size: 14px;
+  color: #666;
+}

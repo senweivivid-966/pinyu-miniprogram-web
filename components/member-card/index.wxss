@@ -1,0 +1,132 @@
+/* components/member-card/index.wxss */
+.member-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.member-card:active {
+  transform: scale(0.98);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.avatar-container {
+  position: relative;
+  margin-right: 24rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 4rpx;
+  right: 4rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background: #4CAF50;
+  border-radius: 50%;
+  border: 2rpx solid #fff;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.member-meta {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.age {
+  margin-right: 16rpx;
+}
+
+.card-body {
+  margin-bottom: 24rpx;
+}
+
+.member-bio {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 16rpx;
+}
+
+.member-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.tag {
+  background: #f0f0f0;
+  color: #666;
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.card-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 72rpx;
+  border-radius: 36rpx;
+  border: none;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.like-btn {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: white;
+}
+
+.chat-btn {
+  background: linear-gradient(135deg, #4ECDC4, #44A08D);
+  color: white;
+}
+
+.btn-text {
+  font-size: 28rpx;
+}
+
+/* Compact card style */
+.member-card.compact {
+  padding: 24rpx;
+}
+
+.member-card.compact .card-header {
+  margin-bottom: 0;
+}
+
+.member-card.compact .avatar {
+  width: 60rpx;
+  height: 60rpx;
+}

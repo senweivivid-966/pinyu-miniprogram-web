@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "PINYU CLUB",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "top-navbar": "/components/top-navbar/index",
+    "search-input": "/components/search-input/index",
+    "hero-banner": "/components/hero-banner/index",
+    "banner-carousel": "/components/banner-carousel/index",
+    "quick-actions": "/components/quick-actions/index",
+    "event-card": "/components/event-card/index"
+  }
+}

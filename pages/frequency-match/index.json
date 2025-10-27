@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "相遇",
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
+  "usingComponents": {
+    "bottom-navbar": "/components/bottom-navbar/index"
+  }
+}

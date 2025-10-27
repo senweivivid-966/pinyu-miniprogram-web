@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>频遇俱乐部 - 欢迎</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            max-width: 414px;
+            width: 100%;
+        }
+        
+        .brand-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .brand-subtitle {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .welcome-text {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+        
+        .description {
+            font-size: 18px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        .note {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+        
+        .disclaimer {
+            font-size: 12px;
+            margin-bottom: 40px;
+            opacity: 0.6;
+        }
+        
+        .experience-btn {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 16px 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            text-transform: none;
+        }
+        
+        .experience-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+        
+        .experience-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 414px) {
+            .brand-title {
+                font-size: 36px;
+                letter-spacing: 2px;
+            }
+            
+            .brand-subtitle {
+                font-size: 20px;
+            }
+            
+            .welcome-text {
+                font-size: 24px;
+            }
+            
+            .description {
+                font-size: 16px;
+            }
+        }
+        
+        /* 加载动画 */
+        .container {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="brand-title">PINYU CLUB</div>
+        <div class="brand-subtitle">频遇俱乐部</div>
+        
+        <div class="welcome-text">欢迎来到频遇俱乐部</div>
+        <div class="description">发现志同道合的朋友，开启精彩社交生活。</div>
+        <div class="note">这是小程序的浏览器预览版本。</div>
+        <div class="disclaimer">注：实际功能请在微信小程序中体验</div>
+        
+        <button class="experience-btn" onclick="navigateToMainPage()">立即体验</button>
+    </div>
+
+    <script>
+        function navigateToMainPage() {
+            window.location.href = 'welcome-page.html';
+        }
+        
+        // 检查是否是首次访问或直接访问欢迎页面
+        let isDirectAccess = !document.referrer || document.referrer.indexOf(window.location.hostname) === -1;
+        let hasVisitedWelcome = sessionStorage.getItem('welcomePageVisited');
+        
+        // 只有在首次访问或直接访问欢迎页面时才显示完整的欢迎体验
+        if (isDirectAccess || !hasVisitedWelcome) {
+            // 标记已访问欢迎页面
+            sessionStorage.setItem('welcomePageVisited', 'true');
+            
+            // 5秒后自动跳转（给用户更多时间看到欢迎页面）
+            setTimeout(function() {
+                navigateToMainPage();
+            }, 5000);
+            
+            console.log('PINYU CLUB - 启动页面 (首次访问)');
+        } else {
+            // 如果不是首次访问，立即跳转
+            navigateToMainPage();
+        }
+    </script>
+</body>
+</html>

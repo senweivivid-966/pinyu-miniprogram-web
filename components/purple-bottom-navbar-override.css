@@ -1,0 +1,82 @@
+/* 底部导航栏激活效果覆盖样式 - 无特效版本 */
+
+/* 基础激活样式 - 普通黑色 */
+.bottom-nav-item.active,
+.bottom-message-icon.active {
+    color: #333333 !important;
+    background: transparent !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* 图标激活样式 - 无滤镜效果 */
+.bottom-nav-item.active .nav-icon-img,
+.bottom-message-icon.active .nav-icon-img {
+    filter: none !important;
+    transition: none !important;
+}
+
+/* 文本激活样式 - 普通黑色 */
+.bottom-nav-item.active .bottom-nav-text,
+.bottom-nav-item.active .bottom-message-text,
+.bottom-message-icon.active .bottom-nav-text,
+.bottom-message-icon.active .bottom-message-text {
+    color: #333333 !important;
+}
+
+/* 悬停效果 - 移除 */
+.bottom-nav-item:hover,
+.bottom-message-icon:hover {
+    color: inherit !important;
+    opacity: 1 !important;
+}
+
+.bottom-nav-item:hover .nav-icon-img,
+.bottom-message-icon:hover .nav-icon-img {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+/* 强制激活样式类 - 移除特效 */
+.force-active-purple {
+    color: #333333 !important;
+    background: transparent !important;
+}
+
+.force-active-purple .nav-icon-img {
+    filter: none !important;
+}
+
+.force-active-purple .bottom-nav-text,
+.force-active-purple .bottom-message-text {
+    color: #333333 !important;
+}
+
+/* 确保所有子元素都使用普通黑色 */
+.bottom-nav-item.active *,
+.bottom-message-icon.active * {
+    color: #333333 !important;
+}
+
+/* 特殊处理：确保图标容器也使用普通黑色 */
+.bottom-nav-item.active .bottom-nav-icon,
+.bottom-message-icon.active .bottom-nav-icon {
+    color: #333333 !important;
+}
+
+/* 移除动画效果 */
+.bottom-nav-item.active,
+.bottom-message-icon.active {
+    animation: none !important;
+}
+
+/* 最高优先级保护 */
+html body .bottom-nav-item.active,
+html body .bottom-message-icon.active {
+    color: #333333 !important;
+}
+
+html body .bottom-nav-item.active *,
+html body .bottom-message-icon.active * {
+    color: #333333 !important;
+}

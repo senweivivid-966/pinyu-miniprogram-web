@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>频遇俱乐部 - 小程序预览</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(180deg, #fdf2f8 0%, #f8f9fa 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            padding: 8px 12px;
+            min-height: 100vh;
+        }
+        
+        /* 移动端优化 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 414px;
+                margin: 0 auto;
+            }
+        }
+        
+        /* 顶部导航栏样式 */
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #e0e0e0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.2;
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .navbar-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            padding: 4px 6px;
+            text-decoration: none;
+            color: #666;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            color: #333;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item.active {
+            color: #007AFF;
+            background: rgba(0, 122, 255, 0.08);
+            position: relative;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #007AFF;
+            border-radius: 1px;
+        }
+
+        .message-section {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .message-icon {
+            width: 24px;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+            position: relative;
+        }
+
+        .message-icon:hover {
+            background: #e0e0e0;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            padding: 1px 4px;
+            border-radius: 8px;
+            min-width: 16px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* 搜索框样式 */
+        .search-section {
+            margin-bottom: 12px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 16px;
+            border: 2px solid rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            height: 36px;
+        }
+        
+        .search-input:focus {
+            border-color: #FF6B9D;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+        
+        /* 信息条样式 */
+        .info-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 8px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .info-subtitle {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .info-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .chip-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+            padding: 4px 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* 推荐活动样式 */
+        .events-section {
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .section-more {
+            font-size: 12px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #EC4899 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .component-event-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .event-cover {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .event-content {
+            padding: 16px;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .event-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .event-location {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .event-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-capacity {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .event-register-btn {
+            background: linear-gradient(135deg, #6e15ff 0%, #8735fd 50%, #9e2cf8 100%);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        /* Hero Banner样式 */
+        .hero-banner {
+            background: linear-gradient(135deg, #FF6B9D, #EC4899);
+            border-radius: 12px;
+            padding: 16px 12px;
+            margin-bottom: 16px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+            aspect-ratio: 2.2/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .hero-subtitle {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .hero-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            align-self: center;
+            max-width: 120px;
+        }
+        
+        .hero-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        /* 立即加入板块样式 */
+        .join-section {
+            margin: 16px 0;
+            padding: 0 4px;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .join-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        .join-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .join-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .join-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .join-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .join-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 414px) {
+            .container {
+                padding: 6px 10px;
+            }
+            
+            .logo-text, .logo-subtext {
+                font-size: 15px;
+            }
+            
+            .navbar {
+                gap: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .nav-item {
+                font-size: 10px;
+            }
+            
+            .search-input {
+                height: 34px;
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            
+            .hero-banner {
+                padding: 14px 10px;
+                border-radius: 10px;
+            }
+            
+            .hero-title {
+                font-size: 15px;
+            }
+            
+            .hero-subtitle {
+                font-size: 10px;
+            }
+            
+            .hero-button {
+                font-size: 11px;
+                padding: 5px 14px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .container {
+                padding: 4px 8px;
+            }
+            
+            .logo-text, .logo-subtext {
+                font-size: 14px;
+            }
+            
+            .navbar {
+                gap: 10px;
+            }
+            
+            .nav-item {
+                font-size: 9px;
+            }
+            
+            .search-input {
+                height: 32px;
+                font-size: 11px;
+            }
+            
+            .hero-title {
+                font-size: 14px;
+            }
+            
+            .hero-subtitle {
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 统一顶部导航栏 -->
+        <div class="navbar-container">
+            <div class="navbar-content">
+                <div class="logo-section">
+                    <div class="logo-text">PINYU CLUB</div>
+                </div>
+                <div class="navbar-menu">
+                    <a href="#" class="nav-item active">首页</a>
+                    <a href="#" class="nav-item">我的主页</a>
+                    <a href="#" class="nav-item">同频相遇</a>
+                    <a href="#" class="nav-item">测测</a>
+                    <a href="#" class="nav-item">活动</a>
+                    <a href="#" class="nav-item">社区</a>
+                    <a href="#" class="nav-item">会员中心</a>
+                </div>
+            </div>
+            <div class="message-section">
+                <div class="message-icon">
+                    💬
+                    <div class="nav-badge">126</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 搜索框 -->
+        <div class="search-section">
+            <input type="text" class="search-input" placeholder="Search for jobs">
+        </div>
+
+        <!-- 信息条 -->
+        <div class="info-banner">
+            <div class="info-content">
+                <div class="info-title">线下同城聚会</div>
+                <div class="info-subtitle">周末见</div>
+            </div>
+            <div class="info-actions">
+                <div class="chip chip-info">推荐</div>
+                <button class="btn-secondary" onclick="handleActivities()">了解更多</button>
+            </div>
+        </div>
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-title">发现同频伙伴</div>
+            <div class="hero-subtitle">高质量社交，从这里开始</div>
+            <button class="hero-button" onclick="handleJoinNow()">立即体验</button>
+        </div>
+
+        <!-- 推荐活动 -->
+        <div class="events-section">
+            <div class="section-header">
+                <div class="section-title">推荐活动</div>
+                <div class="section-more" onclick="handleActivities()">查看全部</div>
+            </div>
+            <div class="events-list" id="eventsList">
+                <!-- 活动列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 立即加入板块 -->
+        <div class="join-section">
+            <div class="join-card">
+                <div class="join-title">同频终相逢，共振即永恒</div>
+                <div class="join-subtitle">AI驱动的高质量线下活动与专属社交</div>
+                <button class="join-button" onclick="handleJoinClick()">立即加入</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 活动数据
+        const eventsData = [
+            {
+                id: 1,
+                title: "周末户外徒步活动",
+                meta: "2024年1月15日 09:00",
+                location: "香山公园",
+                capacity: "12/20人",
+                cover: "活动封面"
+            },
+            {
+                id: 2,
+                title: "咖啡品鉴交流会",
+                meta: "2024年1月20日 14:00",
+                location: "三里屯咖啡厅",
+                capacity: "8/15人",
+                cover: "活动封面"
+            }
+        ];
+
+        // 渲染活动列表
+        function renderEvents() {
+            const eventsList = document.getElementById('eventsList');
+            if (!eventsList) return;
+
+            eventsList.innerHTML = eventsData.map(event => `
+                <div class="component-event-card">
+                    <div class="event-cover">${event.cover}</div>
+                    <div class="event-content">
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-meta">${event.meta}</div>
+                        <div class="event-location">${event.location}</div>
+                        <div class="event-stats">
+                            <div class="event-capacity">${event.capacity}</div>
+                            <button class="event-register-btn" onclick="handleEventRegister(${event.id})">报名</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 处理活动报名
+        function handleEventRegister(eventId) {
+            const event = eventsData.find(e => e.id === eventId);
+            if (event) {
+                alert(`报名活动：${event.title}\n\n这是演示版本，实际报名功能需要在完整版小程序中实现。`);
+            }
+        }
+
+        // 处理活动相关操作
+        function handleActivities() {
+            // 显示选择弹窗
+            const userChoice = confirm('活动功能正在开发中！\n\n点击"确定"查看干净页面预览\n点击"取消"查看开发提示');
+            
+            if (userChoice) {
+                // 用户选择查看干净页面
+                window.location.href = 'clean-homepage.html';
+            } else {
+                // 显示开发中提示
+                alert('测试功能正在开发中，敬请期待！');
+            }
+        }
+        
+        // 立即加入功能
+        function handleJoinClick() {
+            alert('欢迎加入PINYU CLUB！\n\n这是一个高端社交俱乐部小程序的演示版本。\n\n如需完整体验，请在微信开发者工具中打开此项目。');
+        }
+        
+        // Hero Banner按钮
+        function handleJoinNow() {
+            alert('欢迎体验频遇俱乐部！\n\n发现志同道合的朋友，开启精彩社交生活。');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEvents(); // 渲染活动列表
+        });
+        
+        // 模拟小程序环境检测
+        console.log('频遇小程序 - 浏览器预览模式');
+        console.log('项目结构已加载完成');
+        console.log('如需调试，请使用微信开发者工具');
+    </script>
+</body>
+</html>
